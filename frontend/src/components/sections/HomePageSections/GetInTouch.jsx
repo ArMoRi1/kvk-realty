@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import axios from 'axios'
 
 function GetInTouch() {
   const [formData, setFormData] = useState({
@@ -8,18 +9,28 @@ function GetInTouch() {
     message: '',
   })
   const [submitted, setSubmitted] = useState(false)
-
+  const [loading, setLoading] = useState(false)
   const handleChange = (e) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log('Form submitted:', formData)
+  
+
+const handleSubmit = async (e) => {
+  e.preventDefault()
+  setLoading(true)
+  try {
+    await axios.post('http://127.0.0.1:8000/api/contact/', formData)
     setSubmitted(true)
     setTimeout(() => setSubmitted(false), 4000)
     setFormData({ name: '', email: '', phone: '', message: '' })
+  } catch (err) {
+    console.error('Error:', err)
+    alert('Something went wrong. Please try again.')
+  } finally {
+    setLoading(false)
   }
+}
 
   const inputClass = "w-full bg-transparent border-b border-white/20 text-white placeholder-white/30 py-3 text-sm font-sans tracking-wide focus:outline-none focus:border-gold transition-colors duration-300"
 
@@ -103,9 +114,10 @@ function GetInTouch() {
               />
               <button
                 type="submit"
-                className="mt-4 border border-gold text-gold px-8 py-4 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300 self-start"
+                disabled={loading}
+                className="mt-4 border border-gold text-gold px-8 py-4 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300 self-start cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Send Message
+                {loading ? 'Sending...' : 'Send Message'}
               </button>
             </form>
           )}
