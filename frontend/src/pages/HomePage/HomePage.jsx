@@ -1,5 +1,11 @@
+import HeroSlider from '../../components/sections/HomePageSections/HeroSlider'
+
 function HomePage() {
-  return <div>Home Page</div>
+  return (
+    <>
+      <HeroSlider />
+    </>
+  )
 }
 
 export default HomePage
