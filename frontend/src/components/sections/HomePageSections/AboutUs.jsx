@@ -59,7 +59,7 @@ function AboutUs() {
   }, [teamVisible])
 
   return (
-    <section className="w-full bg-dark">
+    <section className="w-full bg-dark pt-8">
 
       {/* Блок 1 — Текст зліва, фото боса справа */}
       <div
