@@ -31,6 +31,9 @@ function HeroSlider() {
     return () => clearInterval(timer)
   }, [])
 
+  const prev = () => setCurrent(prev => (prev - 1 + slides.length) % slides.length)
+  const next = () => setCurrent(prev => (prev + 1) % slides.length)
+
   return (
     <div className="relative w-full h-screen overflow-hidden">
 
@@ -63,6 +66,22 @@ function HeroSlider() {
         </p>
         <button className="border border-gold text-gold px-8 py-3 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300">
           Explore Properties
+        </button>
+      </div>
+
+      {/* Стрілки */}
+      <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-8 z-10">
+        <button
+          onClick={prev}
+          className="text-white text-3xl hover:text-gold transition-colors duration-300"
+        >
+          ‹
+        </button>
+        <button
+          onClick={next}
+          className="text-white text-3xl hover:text-gold transition-colors duration-300"
+        >
+          ›
         </button>
       </div>
 
