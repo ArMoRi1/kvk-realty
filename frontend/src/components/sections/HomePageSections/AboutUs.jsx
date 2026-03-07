@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
+import TeamSlider from './TeamSlider'
+
 import bossPhoto from '../../../assets/img/AboutUs/boss.jpg'
 import teamPhoto from '../../../assets/img/AboutUs/team.jpg'
 
@@ -125,7 +127,7 @@ function AboutUs() {
           </p>
         </div>
       </div>
-
+      <TeamSlider />
     </section>
   )
 }
