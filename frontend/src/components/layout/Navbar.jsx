@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom'
 
 function Navbar() {
   return (
-    <nav className="absolute top-0 left-0 w-full z-50 px-10 py-6 flex items-center justify-between">
+    <nav className="fixed top-0 left-0 w-full z-50 px-10 py-6 flex items-center justify-between">
 
       {/* Ліве меню */}
       <ul className="flex gap-10 tracking-widest text-xs font-sans font-medium text-white">
