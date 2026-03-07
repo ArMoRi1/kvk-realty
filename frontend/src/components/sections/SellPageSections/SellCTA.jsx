@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function SellCTA() {
   return (
     <section className="w-full bg-dark-soft py-24 px-16 border-t border-white/10">
@@ -13,18 +15,21 @@ function SellCTA() {
           Get a free market evaluation and find out what your home is worth today.
         </p>
         <div className="flex gap-4 justify-center">
-          <a
-            href="tel:2482123333"
-            className="border border-gold text-gold px-10 py-4 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300"
+          
+          <Link
+          to="tel:2482123333"
+          className="border border-gold text-gold px-10 py-4 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300"
           >
-            Get Free Evaluation
-          </a>
-          <a
-            href="/agents"
+           Get Free Evaluation
+          </Link>
+
+          <Link
+            to="/agents"
             className="border border-white/20 text-white/50 px-10 py-4 text-xs tracking-widest font-sans uppercase hover:border-gold hover:text-gold transition-all duration-300"
+            
           >
             Meet Our Agents
-          </a>
+          </Link>
         </div>
       </div>
     </section>

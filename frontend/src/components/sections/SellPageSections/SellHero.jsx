@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function SellHero() {
   return (
     <section className="relative w-full h-screen overflow-hidden">
@@ -19,12 +21,9 @@ function SellHero() {
         <p className="text-white/60 tracking-widest text-sm font-sans uppercase mb-10">
           Metro Detroit Area — Maximum Value For Your Property
         </p>
-        <a
-          href="tel:2482123333"
-          className="border border-gold text-gold px-10 py-4 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300"
-        >
+        <Link to="/agents" className="border border-gold text-gold px-10 py-4 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300">
           Get Free Evaluation
-        </a>
+        </Link>
       </div>
     </section>
   )

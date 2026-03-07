@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function BuyCTA() {
   return (
     <section className="w-full bg-dark-soft py-24 px-16 border-t border-white/10">
@@ -13,18 +15,27 @@ function BuyCTA() {
           Our agents are ready to guide you every step of the way. One call is all it takes.
         </p>
         <div className="flex gap-4 justify-center">
+          
           <a
-            href="tel:2482123333"
-            className="border border-gold text-gold px-10 py-4 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300"
-          >
-            Call Us Now
+            
+            >
+            
           </a>
-          <a
-            href="/agents"
+        
+          <Link
+          to="tel:2482123333"
+          className="border border-gold text-gold px-10 py-4 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300"
+          >
+           Call Us Now
+          </Link>
+
+          <Link
+            to="/agents"
             className="border border-white/20 text-white/50 px-10 py-4 text-xs tracking-widest font-sans uppercase hover:border-gold hover:text-gold transition-all duration-300"
+            
           >
             Meet Our Agents
-          </a>
+          </Link>
         </div>
       </div>
     </section>
