@@ -53,8 +53,8 @@ function Navbar() {
           </NavLink>
         </li>
         <li>
-          <a href="tel:+380000000000" className="text-gold hover:text-gold-light transition-colors duration-300">
-            +38 (000) 000-00-00
+          <a href="tel:248-212-3333" className="text-gold hover:text-gold-light transition-colors duration-300">
+            248-212-3333
           </a>
         </li>
       </ul>
