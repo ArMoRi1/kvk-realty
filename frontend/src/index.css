@@ -12,3 +12,20 @@
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-sans: 'Raleway', sans-serif;
 }
+
+/* Кастомний скролбар */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0A0A0A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C9A84C;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #E8C97A;
+}
