@@ -5,13 +5,13 @@ const slides = [
     id: 1,
     image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80',
     title: 'Find Your Dream Home',
-    subtitle: 'Premium real estate in the best locations',
+    subtitle: 'Premium real estate in Metro Detroit Area',
   },
   {
     id: 2,
     image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80',
-    title: 'Luxury Living Awaits',
-    subtitle: 'Discover exclusive properties with KVK Realty Group',
+    title: 'Where Families Belong',
+    subtitle: 'Discover the best suburbs of Detroit',
   },
   {
     id: 3,
@@ -27,14 +27,13 @@ function HeroSlider() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent(prev => (prev + 1) % slides.length)
-    }, 6500)
+    }, 7000)
     return () => clearInterval(timer)
   }, [])
 
   return (
     <div className="relative w-full h-screen overflow-hidden">
 
-      {/* Слайди */}
       {slides.map((slide, index) => (
         <div
           key={slide.id}
@@ -47,19 +46,37 @@ function HeroSlider() {
             alt={slide.title}
             className="w-full h-full object-cover"
           />
-          {/* Темний оверлей */}
-          <div className="absolute inset-0 bg-black/40" />
+          <div className="absolute inset-0 bg-black/50" />
         </div>
       ))}
 
       {/* Текст */}
-      <div className="absolute bottom-32 left-16 text-white z-10">
-        <h1 className="text-6xl font-serif mb-4">
+      <div className="absolute bottom-32 left-16 z-10">
+        <p className="text-gold tracking-widest text-xs font-sans uppercase mb-4">
+          KVK Realty Group
+        </p>
+        <h1 className="text-7xl font-serif text-white mb-6 leading-tight">
           {slides[current].title}
         </h1>
-        <p className="text-lg tracking-widest uppercase opacity-80">
+        <p className="text-white/70 tracking-widest text-sm font-sans uppercase mb-8">
           {slides[current].subtitle}
         </p>
+        <button className="border border-gold text-gold px-8 py-3 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300">
+          Explore Properties
+        </button>
+      </div>
+
+      {/* Індикатор слайдів */}
+      <div className="absolute bottom-8 left-16 flex gap-3 z-10">
+        {slides.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrent(index)}
+            className={`h-px transition-all duration-300 ${
+              index === current ? 'w-12 bg-gold' : 'w-6 bg-white/40'
+            }`}
+          />
+        ))}
       </div>
 
     </div>

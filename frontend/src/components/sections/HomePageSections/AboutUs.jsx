@@ -11,7 +11,6 @@ function AboutUs() {
   const sectionRef = useRef(null)
   const typingRef = useRef(null)
 
-  // Спостерігаємо коли секція з'являється у viewport
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -26,7 +25,6 @@ function AboutUs() {
     return () => observer.disconnect()
   }, [])
 
-  // Ефект друкування
   useEffect(() => {
     if (!isVisible) return
     let i = 0
@@ -42,7 +40,7 @@ function AboutUs() {
   return (
     <section
       ref={sectionRef}
-      className="w-full min-h-screen bg-stone-50 flex items-center px-16 py-24 gap-12"
+      className="w-full min-h-screen bg-dark flex items-center px-16 py-24 gap-12"
     >
       {/* Фото боса — виїжджає зліва */}
       <div
@@ -55,7 +53,7 @@ function AboutUs() {
           alt="CEO"
           className="w-full h-[500px] object-cover rounded-sm shadow-2xl"
         />
-        <p className="text-center mt-4 text-sm tracking-widest text-stone-400 uppercase">
+        <p className="text-center mt-4 text-sm tracking-widest text-gold uppercase">
           Founder & CEO
         </p>
       </div>
@@ -66,15 +64,15 @@ function AboutUs() {
           isVisible ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        <p className="text-xs tracking-widest text-stone-400 uppercase mb-4">
+        <p className="text-xs tracking-widest text-gold uppercase mb-4">
           About Us
         </p>
-        <h2 className="text-4xl font-serif text-stone-800 mb-8">
+        <h2 className="text-4xl font-serif text-white mb-8">
           KVK Realty Group
         </h2>
-        <p className="text-stone-600 leading-relaxed text-lg min-h-[200px] font-light">
+        <p className="text-white/60 leading-relaxed text-lg min-h-[200px] font-light">
           {displayedText}
-          <span className="animate-pulse">|</span>
+          <span className="text-gold animate-pulse">|</span>
         </p>
       </div>
 
@@ -89,7 +87,7 @@ function AboutUs() {
           alt="Team"
           className="w-full h-[500px] object-cover rounded-sm shadow-2xl"
         />
-        <p className="text-center mt-4 text-sm tracking-widest text-stone-400 uppercase">
+        <p className="text-center mt-4 text-sm tracking-widest text-gold uppercase">
           Our Team
         </p>
       </div>
