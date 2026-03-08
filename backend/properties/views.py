@@ -3,7 +3,43 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import ContactRequest, Agent
+from .models import ContactRequest, Agent, BlogPost
+
+@api_view(['GET'])
+def blog_list(request):
+    posts = BlogPost.objects.all()
+    data = []
+    for post in posts:
+        data.append({
+            'id': post.id,
+            'type': post.type,
+            'date': post.date.strftime('%B %d, %Y'),
+            'title': post.title,
+            'location': post.location,
+            'image': request.build_absolute_uri(post.image.url) if post.image else None,
+            'text': post.text,
+            'tag': post.tag,
+        })
+    return Response(data)
+
+@api_view(['GET'])
+def blog_detail(request, pk):
+    try:
+        post = BlogPost.objects.get(pk=pk)
+    except BlogPost.DoesNotExist:
+        return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    data = {
+        'id': post.id,
+        'type': post.type,
+        'date': post.date.strftime('%B %d, %Y'),
+        'title': post.title,
+        'location': post.location,
+        'image': request.build_absolute_uri(post.image.url) if post.image else None,
+        'text': post.text,
+        'tag': post.tag,
+    }
+    return Response(data)
 
 @api_view(['GET'])
 def agents_list(request):

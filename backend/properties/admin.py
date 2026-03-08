@@ -1,5 +1,12 @@
 from django.contrib import admin
-from .models import ContactRequest, Agent
+from .models import ContactRequest, Agent, BlogPost
+
+@admin.register(BlogPost)
+class BlogPostAdmin(admin.ModelAdmin):
+    list_display = ('title', 'type', 'date', 'location')
+    list_filter = ('type',)
+    search_fields = ('title', 'location')
+    ordering = ('-date',)
 
 @admin.register(ContactRequest)
 class ContactRequestAdmin(admin.ModelAdmin):
