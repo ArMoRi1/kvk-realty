@@ -1,9 +1,30 @@
-import { useState } from 'react'
-import { agents } from '../../../mocks/agents'
+import { useState, useEffect } from 'react'
+import { getAgents } from '../../../api/agents'
 import ContactAgentModal from '../../ui/ContactAgentModal'
+
 function AgentsHero() {
-  const [selected, setSelected] = useState(agents[0])
+  const [agents, setAgents] = useState([])
+  const [selected, setSelected] = useState(null)
   const [modalOpen, setModalOpen] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    getAgents()
+      .then(res => {
+        setAgents(res.data)
+        setSelected(res.data[0])
+      })
+      .catch(err => console.error(err))
+      .finally(() => setLoading(false))
+  }, [])
+
+  if (loading) return (
+    <div className="w-full min-h-screen bg-dark flex items-center justify-center">
+      <p className="text-gold text-xs tracking-widest uppercase font-sans">Loading...</p>
+    </div>
+  )
+
+  if (!selected) return null
 
   return (
     <div className="w-full min-h-screen bg-dark flex pt-24">
@@ -101,16 +122,16 @@ function AgentsHero() {
               Contact Agent
             </button>
 
-            {modalOpen && (
-              <ContactAgentModal
-                agent={selected}
-                onClose={() => setModalOpen(false)}
-              />
-            )}
-
           </div>
         </div>
       </div>
+
+      {modalOpen && (
+        <ContactAgentModal
+          agent={selected}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
 
     </div>
   )

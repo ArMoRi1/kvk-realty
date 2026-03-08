@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ContactRequest
+from .models import ContactRequest, Agent
 
 @admin.register(ContactRequest)
 class ContactRequestAdmin(admin.ModelAdmin):
@@ -9,3 +9,8 @@ class ContactRequestAdmin(admin.ModelAdmin):
     list_editable = ('is_read',)
     readonly_fields = ('name', 'email', 'phone', 'message', 'created_at')
     ordering = ('-created_at',)
+
+@admin.register(Agent)
+class AgentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'role', 'phone', 'email', 'deals', 'experience')
+    search_fields = ('name', 'role', 'email')

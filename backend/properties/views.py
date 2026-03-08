@@ -3,7 +3,24 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import ContactRequest
+from .models import ContactRequest, Agent
+
+@api_view(['GET'])
+def agents_list(request):
+    agents = Agent.objects.all()
+    data = []
+    for agent in agents:
+        data.append({
+            'id': agent.id,
+            'name': agent.name,
+            'role': agent.role,
+            'photo': request.build_absolute_uri(agent.photo.url) if agent.photo else None,
+            'phone': agent.phone,
+            'email': agent.email,
+            'deals': agent.deals,
+            'experience': agent.experience,
+        })
+    return Response(data)   
 
 @api_view(['POST'])
 def contact(request):
