@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import HomePage from './pages/HomePage/HomePage'
@@ -8,6 +9,17 @@ import BlogPage from './pages/BlogPage/BlogPage'
 import BlogPostPage from './pages/BlogPage/BlogPostPage'
 
 function App() {
+
+useEffect(() => {
+  const handleKeyDown = (e) => {
+    if (e.ctrlKey && e.shiftKey && e.key === 'K') {
+      window.open('http://localhost:8000/admin/', '_blank')
+    }
+  }
+  window.addEventListener('keydown', handleKeyDown)
+  return () => window.removeEventListener('keydown', handleKeyDown)
+}, [])
+
   return (
     <BrowserRouter>
       <Routes>
