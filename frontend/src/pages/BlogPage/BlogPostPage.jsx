@@ -4,9 +4,15 @@ import { getBlogPost } from '../../api/blog'
 import { ArrowLeft } from 'lucide-react'
 
 const tagColors = {
-  "Deal Story": "text-gold border-gold",
-  "Event": "text-blue-400 border-blue-400",
-  "Market News": "text-green-400 border-green-400",
+  "deal": "text-gold border-gold",
+  "event": "text-blue-400 border-blue-400",
+  "news": "text-green-400 border-green-400",
+}
+
+const tagLabels = {
+  "deal": "Deal Story",
+  "event": "Event",
+  "news": "Market News",
 }
 
 function BlogPostPage() {
@@ -34,10 +40,9 @@ function BlogPostPage() {
   )
 
   return (
-    <div className="w-full min-h-screen bg-dark pt-32 pb-24">
+    <div className="w-full min-h-screen bg-dark pt-24 pb-16">
       <div className="max-w-3xl mx-auto px-8">
 
-        {/* Назад */}
         <Link
           to="/blog"
           className="flex items-center gap-2 text-white/40 hover:text-gold transition-colors duration-300 text-xs tracking-widest uppercase font-sans mb-12"
@@ -46,23 +51,20 @@ function BlogPostPage() {
           Back to Blog
         </Link>
 
-        {/* Мета */}
         <p className="text-white/30 text-xs tracking-widest uppercase font-sans mb-3">
           {post.date} — {post.location}
         </p>
 
-        <span className={`text-xs tracking-widest uppercase font-sans border px-3 py-1 mb-6 inline-block ${tagColors[post.tag]}`}>
-          {post.tag}
+        <span className={`text-xs tracking-widest uppercase font-sans border px-3 py-1 mb-6 inline-block ${tagColors[post.type]}`}>
+          {tagLabels[post.type]}
         </span>
 
-        {/* Заголовок */}
-        <h1 className="text-5xl font-serif text-white mt-6 mb-8 leading-tight">
+        <h1 className="text-5xl font-serif text-white mt-6 mb-4 leading-tight">
           {post.title}
         </h1>
 
         <div className="w-12 h-px bg-gold mb-10" />
 
-        {/* Фото */}
         {post.image && (
           <img
             src={post.image}
@@ -71,7 +73,6 @@ function BlogPostPage() {
           />
         )}
 
-        {/* Текст */}
         <p className="text-white/60 font-sans font-light leading-relaxed text-lg">
           {post.text}
         </p>

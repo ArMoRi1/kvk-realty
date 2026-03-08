@@ -18,7 +18,6 @@ def blog_list(request):
             'location': post.location,
             'image': request.build_absolute_uri(post.image.url) if post.image else None,
             'text': post.text,
-            'tag': post.tag,
         })
     return Response(data)
 
@@ -37,7 +36,6 @@ def blog_detail(request, pk):
         'location': post.location,
         'image': request.build_absolute_uri(post.image.url) if post.image else None,
         'text': post.text,
-        'tag': post.tag,
     }
     return Response(data)
 

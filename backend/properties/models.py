@@ -13,7 +13,6 @@ class BlogPost(models.Model):
     location = models.CharField(max_length=100, blank=True)
     image = models.ImageField(upload_to='blog/', blank=True)
     text = models.TextField()
-    tag = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

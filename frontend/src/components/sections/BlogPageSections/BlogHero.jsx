@@ -3,17 +3,31 @@ import { Link } from 'react-router-dom'
 import { getBlogPosts } from '../../../api/blog'
 
 const tagColors = {
-  "Deal Story": "text-gold border-gold",
-  "Event": "text-blue-400 border-blue-400",
-  "Market News": "text-green-400 border-green-400",
+  "deal": "text-gold border-gold",
+  "event": "text-blue-400 border-blue-400",
+  "news": "text-green-400 border-green-400",
 }
 
-const filters = ["All", "Deal Story", "Event", "Market News"]
+const tagLabels = {
+  "deal": "Deal Story",
+  "event": "Event",
+  "news": "Market News",
+}
+
+const filters = ["all", "deal", "event", "news"]
+
+const filterLabels = {
+  "all": "All",
+  "deal": "Deal Story",
+  "event": "Event",
+  "news": "Market News",
+}
+
 const PER_PAGE = 3
 
 function BlogHero() {
   const [posts, setPosts] = useState([])
-  const [active, setActive] = useState("All")
+  const [active, setActive] = useState("all")
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(true)
 
@@ -30,9 +44,9 @@ function BlogHero() {
     </div>
   )
 
-  const filtered = active === "All"
+  const filtered = active === "all"
     ? posts
-    : posts.filter(p => p.tag === active)
+    : posts.filter(p => p.type === active)
 
   const totalPages = Math.ceil(filtered.length / PER_PAGE)
   const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE)
@@ -64,7 +78,7 @@ function BlogHero() {
                   : 'border-white/20 text-white/50 hover:border-gold hover:text-gold'
               }`}
             >
-              {filter}
+              {filterLabels[filter]}
             </button>
           ))}
         </div>
@@ -80,8 +94,8 @@ function BlogHero() {
                 <p className="text-white/30 text-xs tracking-widest uppercase font-sans mb-3">
                   {post.date} — {post.location}
                 </p>
-                <span className={`text-xs tracking-widest uppercase font-sans border px-3 py-1 mb-4 inline-block ${tagColors[post.tag]}`}>
-                  {post.tag}
+                <span className={`text-xs tracking-widest uppercase font-sans border px-3 py-1 mb-4 inline-block ${tagColors[post.type]}`}>
+                  {tagLabels[post.type]}
                 </span>
                 {post.image && (
                   <img
@@ -95,9 +109,12 @@ function BlogHero() {
                     {post.title}
                   </h2>
                 </Link>
-                <p className="text-white/50 font-sans font-light leading-relaxed">
+                <p className="text-white/50 font-sans font-light leading-relaxed line-clamp-3">
                   {post.text}
                 </p>
+                <Link to={`/blog/${post.id}`} className="text-gold text-xs tracking-widest uppercase font-sans mt-3 inline-block hover:text-gold-light transition-colors duration-300">
+                  Read More →
+                </Link>
                 {index < paginated.length - 1 && (
                   <div className="w-full h-px bg-white/5 mt-16" />
                 )}
