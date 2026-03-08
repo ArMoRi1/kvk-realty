@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
 const slides = [
   {
@@ -64,9 +65,9 @@ function HeroSlider() {
         <p className="text-white/70 tracking-widest text-sm font-sans uppercase mb-8">
           {slides[current].subtitle}
         </p>
-        <button className="border border-gold text-gold px-8 py-3 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300">
+        <Link to="/buy" className="border border-gold text-gold px-8 py-3 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300">
           Explore Properties
-        </button>
+        </Link>
       </div>
 
       {/* Стрілки */}
