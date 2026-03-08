@@ -1,6 +1,6 @@
-
-import { useState } from 'react'
-import { posts } from '../../../mocks/blog'
+import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { getBlogPosts } from '../../../api/blog'
 
 const tagColors = {
   "Deal Story": "text-gold border-gold",
@@ -11,9 +11,24 @@ const tagColors = {
 const filters = ["All", "Deal Story", "Event", "Market News"]
 const PER_PAGE = 3
 
-function BlogPage() {
+function BlogHero() {
+  const [posts, setPosts] = useState([])
   const [active, setActive] = useState("All")
   const [page, setPage] = useState(1)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    getBlogPosts()
+      .then(res => setPosts(res.data))
+      .catch(err => console.error(err))
+      .finally(() => setLoading(false))
+  }, [])
+
+  if (loading) return (
+    <div className="w-full min-h-screen bg-dark flex items-center justify-center">
+      <p className="text-gold text-xs tracking-widest uppercase font-sans">Loading...</p>
+    </div>
+  )
 
   const filtered = active === "All"
     ? posts
@@ -24,7 +39,7 @@ function BlogPage() {
 
   const handleFilter = (filter) => {
     setActive(filter)
-    setPage(1) // скидаємо на першу сторінку при зміні фільтру
+    setPage(1)
   }
 
   return (
@@ -68,14 +83,18 @@ function BlogPage() {
                 <span className={`text-xs tracking-widest uppercase font-sans border px-3 py-1 mb-4 inline-block ${tagColors[post.tag]}`}>
                   {post.tag}
                 </span>
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className="w-full h-64 object-cover mt-4 mb-6"
-                />
-                <h2 className="text-2xl font-serif text-white mb-4">
-                  {post.title}
-                </h2>
+                {post.image && (
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="w-full h-64 object-cover mt-4 mb-6"
+                  />
+                )}
+                <Link to={`/blog/${post.id}`}>
+                  <h2 className="text-2xl font-serif text-white mb-4 hover:text-gold transition-colors duration-300">
+                    {post.title}
+                  </h2>
+                </Link>
                 <p className="text-white/50 font-sans font-light leading-relaxed">
                   {post.text}
                 </p>
@@ -127,4 +146,4 @@ function BlogPage() {
   )
 }
 
-export default BlogPage
+export default BlogHero
