@@ -1,12 +1,26 @@
-import { useState } from 'react'
-import { agents } from '../../../mocks/agents'
+import { useState, useEffect } from 'react'
+import { getAgents } from '../../../api/agents'
 
 function TeamSlider() {
+  const [agents, setAgents] = useState([])
   const [active, setActive] = useState(0)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    getAgents()
+      .then(res => setAgents(res.data))
+      .catch(err => console.error(err))
+      .finally(() => setLoading(false))
+  }, [])
 
   const prev = () => setActive(prev => (prev - 1 + agents.length) % agents.length)
   const next = () => setActive(prev => (prev + 1) % agents.length)
 
+  if (loading || agents.length === 0) return (
+    <div className="w-full bg-dark py-24 border-t border-white/10 flex items-center justify-center">
+      <p className="text-gold text-xs tracking-widest uppercase font-sans">Loading...</p>
+    </div>
+  )
   return (
     <div className="w-full bg-dark py-24 px-16 border-t border-white/10">
 
