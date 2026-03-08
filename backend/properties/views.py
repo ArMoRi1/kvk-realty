@@ -12,6 +12,8 @@ def contact(request):
     email = data.get('email', '').strip()
     phone = data.get('phone', '').strip()
     message = data.get('message', '').strip()
+    agent_name = data.get('agent_name', '').strip()
+    agent_email = data.get('agent_email', '').strip()
 
     if not name or not email:
         return Response(
@@ -25,9 +27,13 @@ def contact(request):
         email=email,
         phone=phone,
         message=message,
+        agent_name=agent_name,
+        agent_email=agent_email,
     )
 
-    # Відправляємо email
+    # Формуємо лист
+    agent_line = f"Agent:   {agent_name} ({agent_email})" if agent_name else "Source:  General Contact Form"
+
     subject = f'New Contact Request — {name}'
     body = f"""
 New contact request from KVK Realty website:
@@ -36,18 +42,23 @@ Name:    {name}
 Email:   {email}
 Phone:   {phone or '—'}
 Message: {message or '—'}
+{agent_line}
     """.strip()
+
+    # Отримувачі — бос завжди + агент якщо є
+    recipients = [settings.CONTACT_EMAIL]
+    if agent_email:
+        recipients.append(agent_email)
 
     try:
         send_mail(
             subject=subject,
             message=body,
             from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[settings.CONTACT_EMAIL],
+            recipient_list=recipients,
             fail_silently=False,
         )
     except Exception as e:
-        # Заявка збережена в БД, але email не пішов
         return Response(
             {'warning': 'Saved, but email failed', 'detail': str(e)},
             status=status.HTTP_200_OK

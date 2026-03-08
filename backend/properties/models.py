@@ -5,6 +5,8 @@ class ContactRequest(models.Model):
     email = models.EmailField()
     phone = models.CharField(max_length=20, blank=True)
     message = models.TextField(blank=True)
+    agent_name = models.CharField(max_length=100, blank=True)
+    agent_email = models.EmailField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
 
