@@ -82,8 +82,13 @@ function BlogHero() {
             </button>
           ))}
         </div>
-
-        {/* Таймлайн */}
+{paginated.length === 0 ? (
+  <div className="flex flex-col items-center py-24 gap-4">
+    <div className="w-8 h-px bg-gold/40" />
+    <p className="text-white/30 text-xs tracking-widest uppercase font-sans">No posts found</p>
+    <div className="w-8 h-px bg-gold/40" />
+  </div>
+) :(
         <div className="relative">
           <div className="absolute left-0 top-0 bottom-0 w-px bg-white/10" />
 
@@ -122,6 +127,8 @@ function BlogHero() {
             ))}
           </div>
         </div>
+)}
+        
 
         {/* Пагінація */}
         {totalPages > 1 && (
