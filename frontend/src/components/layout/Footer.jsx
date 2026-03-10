@@ -14,11 +14,13 @@ function Footer() {
 
       {/* Логотип по центру */}
       <div className="text-center mb-8">
-        <p className="text-xs tracking-widest text-gold uppercase mb-1">The</p>
-        <p className="text-2xl font-serif text-white tracking-widest">KVK Realty Group</p>
-        <p className="text-xs tracking-widest text-gold uppercase mt-1">Est. 2024</p>
-      </div>
+        <p className="text-[10px] xs:text-sm tracking-widest text-gold leading-none">THE</p>
+          <p className="text-base xs:text-xl font-serif tracking-widest font-semibold leading-tight text-white">KVK REALTY GROUP</p>
+          <p className="text-[10px] xs:text-sm tracking-widest text-gold mt-0.5">EST. 2024</p>
+        </div>
 
+<div className="absolute left-1/2 -translate-x-1/2 text-center text-white">
+          </div>
       {/* Розділювач */}
       <div className="border-t border-white/10 mb-8" />
 
