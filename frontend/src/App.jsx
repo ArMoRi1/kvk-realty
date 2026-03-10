@@ -27,10 +27,11 @@ useEffect(() => {
           <Route index element={<HomePage />} />
           <Route path="buy" element={<BuyPage />} />
           <Route path="sell" element={<SellPage />} />
-          <Route path="agents" element={<AgentsPage />} />
           <Route path="blog" element={<BlogPage />} />
           <Route path="blog/:id" element={<BlogPostPage />} />
         </Route>
+
+        <Route path="/agents" element={<AgentsPage />} />
       </Routes>
     </BrowserRouter>
   )
