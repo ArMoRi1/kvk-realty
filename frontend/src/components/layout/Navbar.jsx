@@ -20,7 +20,7 @@ function Navbar() {
   return (
     <>
       {/* ===== NAVBAR ===== */}
-      <nav className="fixed top-5 left-0 w-full z-[110] px-10 py-6 flex items-center justify-between">
+      <nav className="fixed top-2 left-0 w-full z-[110] px-10 py-6 flex items-center justify-between">
 
       {/* Ліве меню — desktop / порожній placeholder — mobile */}
       <div className="w-16 lg:w-auto">
@@ -33,9 +33,9 @@ function Navbar() {
 
         {/* Логотип */}
         <div className="absolute left-1/2 -translate-x-1/2 text-center text-white">
-          <p className="text-xs tracking-widest text-gold mb-0.5">THE</p>
-          <p className="text-xl font-serif tracking-widest font-semibold">KVK REALTY GROUP</p>
-          <p className="text-xs tracking-widest text-gold mt-0.5">EST. 2024</p>
+          <p className="text-10 xs:text-xs tracking-widest text-gold leading-none">THE</p>
+          <p className="text-base xs:text-xl font-serif tracking-widest font-semibold leading-tight">KVK REALTY GROUP</p>
+          <p className="text-10 xs:text-xs tracking-widest text-gold mt-0.5">EST. 2024</p>
         </div>
 
         {/* Праве меню — тільки desktop */}
@@ -122,7 +122,7 @@ function Navbar() {
           >
             248-212-3333
           </a>
-        </div>
+          </div>
       </div>
     </>
   )
