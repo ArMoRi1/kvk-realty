@@ -121,10 +121,10 @@ function AgentsHero() {
           ДЕСКТОПНА СТРУКТУРА (≥ 1024px)
           3 колонки: список | фото | інфо
       ================================================================ */}
-      <div className="hidden lg:flex pt-24">
+      <div className="hidden lg:grid grid-cols-[25%_50%_25%] pt-24">
 
         {/* ===== ЛІВА КОЛОНКА — список агентів (~20%) ===== */}
-        <div className="w-1/5 border-r border-white/10 overflow-y-auto h-[calc(100vh-96px)] sticky top-24 flex flex-col">
+        <div className="border-r border-white/10 overflow-y-auto h-[calc(100vh-96px)] sticky top-24 flex flex-col">
           <div className="p-5">
             <p className="text-gold text-xs tracking-widest uppercase font-sans mb-1">KVK Realty Group</p>
             <h1 className="text-xl font-serif text-white mb-6">Our Agents</h1>
@@ -158,7 +158,7 @@ function AgentsHero() {
         {/* ===== ЦЕНТРАЛЬНА КОЛОНКА — велике фото (~45%) ===== */}
         {/* wide = кастомний брейкпоінт 1301px → додай в index.css: --breakpoint-wide: 1301px; */}
         <div className="
-          w-[45%] h-[calc(100vh-96px)] sticky top-24 overflow-hidden bg-dark-soft relative
+          h-[calc(100vh-96px)] sticky top-24 overflow-hidden bg-dark-soft relative
           wide:py-8 wide:px-8
         ">
           <img
@@ -175,7 +175,7 @@ function AgentsHero() {
         </div>
 
         {/* ===== ПРАВА КОЛОНКА — інфо (~35%) ===== */}
-        <div className="w-[35%] border-l border-white/10 h-[calc(100vh-96px)] sticky top-24 overflow-y-auto flex flex-col justify-center px-10 py-10">
+        <div className="border-l border-white/10 h-[calc(100vh-96px)] sticky top-24 overflow-y-auto flex flex-col justify-center px-10 py-10">
           <p className="text-gold text-xs tracking-widest uppercase font-sans mb-2">{selected.role}</p>
           <h2 className="text-4xl font-serif text-white mb-4 leading-tight">{selected.name}</h2>
           <div className="w-8 h-px bg-gold mb-8" />
