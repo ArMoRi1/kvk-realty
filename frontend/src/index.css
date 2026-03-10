@@ -11,6 +11,9 @@
 
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-sans: 'Raleway', sans-serif;
+  
+
+  --breakpoint-wide: 1301px;
 }
 
 /* Кастомний скролбар */
