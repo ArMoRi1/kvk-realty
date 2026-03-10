@@ -73,9 +73,13 @@ function BlogPostPage() {
           />
         )}
 
-        <p className="text-white/60 font-sans font-light leading-relaxed text-lg">
-          {post.text}
-        </p>
+        <div className="flex flex-col gap-6">
+        {post.text.split('\n').filter(Boolean).map((paragraph, i) => (
+          <p key={i} className="text-white/60 font-sans font-light leading-relaxed text-lg">
+            {paragraph}
+          </p>
+        ))}
+      </div>
 
       </div>
     </div>
