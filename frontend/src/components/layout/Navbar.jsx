@@ -33,9 +33,9 @@ function Navbar() {
 
         {/* Логотип */}
         <div className="absolute left-1/2 -translate-x-1/2 text-center text-white">
-          <p className="text-10 xs:text-xs tracking-widest text-gold leading-none">THE</p>
+          <p className="text-[10px] xs:text-sm tracking-widest text-gold leading-none">THE</p>
           <p className="text-base xs:text-xl font-serif tracking-widest font-semibold leading-tight">KVK REALTY GROUP</p>
-          <p className="text-10 xs:text-xs tracking-widest text-gold mt-0.5">EST. 2024</p>
+          <p className="text-[10px] xs:text-sm tracking-widest text-gold mt-0.5">EST. 2024</p>
         </div>
 
         {/* Праве меню — тільки desktop */}
