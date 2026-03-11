@@ -1,4 +1,6 @@
+import { useState, useEffect } from 'react'
 import { BarChart2, Home, Camera, Users, FileText, Key } from 'lucide-react'
+import { useInView } from '../../../hooks/useInView'
 
 const steps = [
   {
@@ -39,9 +41,22 @@ const steps = [
   },
 ]
 
+const STEP_DURATION = 1500
+
 function SellSteps() {
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [sectionRef, inView] = useInView(0.3)
+
+  useEffect(() => {
+  if (!inView) return
+  const timer = setInterval(() => {
+    setActiveIndex(prev => (prev + 1) % steps.length)
+  }, STEP_DURATION)
+  return () => clearInterval(timer)
+}, [inView])
+
   return (
-    <section className="w-full bg-dark-soft py-16 sm:py-24 px-6 sm:px-10 lg:px-16 border-t border-white/10">
+    <section ref={sectionRef} className="w-full bg-dark-soft py-16 sm:py-24 px-6 sm:px-10 lg:px-16 border-t border-white/10">
       <div className="text-center mb-12 sm:mb-16">
         <p className="text-gold text-xs tracking-widest uppercase font-sans mb-4">
           The Process
@@ -50,56 +65,86 @@ function SellSteps() {
         <div className="w-12 h-px bg-gold mx-auto mt-6" />
       </div>
 
-      {/* ── Десктоп — горизонтальний ── */}
+      {/* ── Десктоп ── */}
       <div className="hidden lg:flex items-start justify-between max-w-6xl mx-auto">
-        {steps.map((step, index) => (
-          <div key={step.id} className="flex items-start">
-            <div className="flex flex-col items-center text-center w-28">
-              <div className="w-14 h-14 border border-gold/40 flex items-center justify-center text-gold mb-4 hover:border-gold hover:bg-gold/10 transition-all duration-300">
-                {step.icon}
-              </div>
-              <p className="text-white font-sans text-sm font-medium mb-2 leading-tight">
-                {step.title}
-              </p>
-              <p className="text-white/40 font-sans text-xs leading-relaxed">
-                {step.desc}
-              </p>
-            </div>
-            {index < steps.length - 1 && (
-              <div className="flex items-center mt-6 mx-1">
-                <div className="w-6 h-px bg-gold/30" />
-                <div className="text-gold/30 text-lg">›</div>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* ── Мобільний — вертикальний список ── */}
-      <div className="lg:hidden flex flex-col max-w-sm mx-auto">
-        {steps.map((step, index) => (
-          <div key={step.id} className="flex flex-col items-center">
-            <div className="flex items-center gap-5 mx-auto">
-              <div className="w-12 h-12 border border-gold/40 flex items-center justify-center text-gold flex-shrink-0">
-                {step.icon}
-              </div>
-              <div className="flex flex-col justify-center w-48">
-                <p className="text-white font-sans text-sm font-medium mb-1 leading-tight">
+        {steps.map((step, index) => {
+          const isActive = index === activeIndex
+          return (
+            <div key={step.id} className="flex items-start">
+              <div className="flex flex-col items-center text-center w-28">
+                <div className={`w-14 h-14 border flex items-center justify-center mb-4 transition-all duration-500 ${
+                  isActive
+                    ? 'border-gold bg-gold/15 text-gold scale-110 shadow-[0_0_16px_2px_rgba(201,168,76,0.25)]'
+                    : 'border-gold/40 text-gold/50 scale-100'
+                }`}>
+                  {step.icon}
+                </div>
+                <p className={`font-sans text-sm font-medium mb-2 leading-tight transition-colors duration-500 ${
+                  isActive ? 'text-white' : 'text-white/50'
+                }`}>
                   {step.title}
                 </p>
-                <p className="text-white/40 font-sans text-xs leading-relaxed">
+                <p className={`font-sans text-xs leading-relaxed transition-colors duration-500 ${
+                  isActive ? 'text-white/60' : 'text-white/30'
+                }`}>
                   {step.desc}
                 </p>
               </div>
+              {index < steps.length - 1 && (
+                <div className="flex items-center mt-6 mx-1">
+                  <div className={`w-6 h-px transition-colors duration-500 ${
+                    index < activeIndex ? 'bg-gold' : 'bg-gold/20'
+                  }`} />
+                  <div className={`text-lg transition-colors duration-500 ${
+                    index < activeIndex ? 'text-gold' : 'text-gold/20'
+                  }`}>›</div>
+                </div>
+              )}
             </div>
-            {index < steps.length - 1 && (
-              <div className="flex flex-col items-center my-3">
-                <div className="h-6 w-px bg-gold/30" />
-                <div className="text-gold/30 text-lg leading-none">∨</div>
+          )
+        })}
+      </div>
+
+      {/* ── Мобільний ── */}
+      <div className="lg:hidden flex flex-col max-w-sm mx-auto">
+        {steps.map((step, index) => {
+          const isActive = index === activeIndex
+          return (
+            <div key={step.id} className="flex flex-col items-center">
+              <div className="flex items-center gap-5 mx-auto">
+                <div className={`w-12 h-12 border flex items-center justify-center flex-shrink-0 transition-all duration-500 ${
+                  isActive
+                    ? 'border-gold bg-gold/15 text-gold scale-110 shadow-[0_0_12px_2px_rgba(201,168,76,0.2)]'
+                    : 'border-gold/40 text-gold/50 scale-100'
+                }`}>
+                  {step.icon}
+                </div>
+                <div className="flex flex-col justify-center w-48">
+                  <p className={`font-sans text-sm font-medium mb-1 leading-tight transition-colors duration-500 ${
+                    isActive ? 'text-white' : 'text-white/50'
+                  }`}>
+                    {step.title}
+                  </p>
+                  <p className={`font-sans text-xs leading-relaxed transition-colors duration-500 ${
+                    isActive ? 'text-white/60' : 'text-white/30'
+                  }`}>
+                    {step.desc}
+                  </p>
+                </div>
               </div>
-            )}
-          </div>
-        ))}
+              {index < steps.length - 1 && (
+                <div className="flex flex-col items-center my-3">
+                  <div className={`h-6 w-px transition-colors duration-500 ${
+                    index < activeIndex ? 'bg-gold' : 'bg-gold/20'
+                  }`} />
+                  <div className={`text-lg leading-none transition-colors duration-500 ${
+                    index < activeIndex ? 'text-gold' : 'text-gold/20'
+                  }`}>∨</div>
+                </div>
+              )}
+            </div>
+          )
+        })}
       </div>
 
     </section>
