@@ -19,20 +19,20 @@ const reasons = [
 
 function BuyWhyUs() {
   return (
-    <section className="w-full bg-dark py-24 px-16 border-t border-white/10">
-      <div className="text-center mb-16">
+    <section className="w-full bg-dark py-16 sm:py-24 px-6 sm:px-10 lg:px-16 border-t border-white/10">
+      <div className="text-center mb-12 sm:mb-16">
         <p className="text-gold text-xs tracking-widest uppercase font-sans mb-4">
           Why KVK
         </p>
-        <h2 className="text-4xl font-serif text-white">Why Buy With Us</h2>
+        <h2 className="text-3xl sm:text-4xl font-serif text-white">Why Buy With Us</h2>
         <div className="w-12 h-px bg-gold mx-auto mt-6" />
       </div>
 
-      <div className="grid grid-cols-4 gap-8 max-w-5xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 max-w-5xl mx-auto">
         {reasons.map((r, index) => (
           <div
             key={index}
-            className="border border-white/10 p-8 hover:border-gold transition-all duration-300"
+            className="border border-white/10 p-6 sm:p-8 hover:border-gold transition-all duration-300"
           >
             <p className="text-gold font-serif text-4xl mb-4">0{index + 1}</p>
             <h3 className="text-white font-serif text-lg mb-3">{r.title}</h3>
