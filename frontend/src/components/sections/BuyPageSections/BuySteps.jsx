@@ -73,15 +73,15 @@ function BuySteps() {
       <div className="lg:hidden flex flex-col max-w-sm mx-auto gap-0">
         {steps.map((step, index) => (
           <div key={step.id} className="flex flex-col items-center">
-            <div className="flex items-start gap-5 w-full">
+            <div className="flex items-start gap-5 mx-auto">
               <div className="w-12 h-12 border border-gold/40 flex items-center justify-center text-gold flex-shrink-0">
                 {step.icon}
               </div>
               <div className="flex flex-col justify-center">
-                <p className="text-white font-sans text-sm font-medium mb-1 leading-tight">
+                <p className="text-white font-sans text-sm font-medium mb-1 leading-tight w-full text-center">
                   {step.title}
                 </p>
-                <p className="text-white/40 font-sans text-xs leading-relaxed">
+                <p className="text-white/40 font-sans text-xs leading-relaxed w-full text-center">
                   {step.desc}
                 </p>
               </div>
