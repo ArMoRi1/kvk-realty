@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import axios from 'axios'
+import axiosInstance from '../../../api/axiosInstance'
 
 function GetInTouch() {
   const [formData, setFormData] = useState({
@@ -10,48 +10,47 @@ function GetInTouch() {
   })
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
+
   const handleChange = (e) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  
-
-const handleSubmit = async (e) => {
-  e.preventDefault()
-  setLoading(true)
-  try {
-    await axios.post('http://127.0.0.1:8000/api/contact/', formData)
-    setSubmitted(true)
-    setTimeout(() => setSubmitted(false), 4000)
-    setFormData({ name: '', email: '', phone: '', message: '' })
-  } catch (err) {
-    console.error('Error:', err)
-    alert('Something went wrong. Please try again.')
-  } finally {
-    setLoading(false)
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    try {
+      await axiosInstance.post('/contact/', formData)
+      setSubmitted(true)
+      setTimeout(() => setSubmitted(false), 4000)
+      setFormData({ name: '', email: '', phone: '', message: '' })
+    } catch (err) {
+      console.error('Error:', err)
+      alert('Something went wrong. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
-}
 
   const inputClass = "w-full bg-transparent border-b border-white/20 text-white placeholder-white/30 py-3 text-sm font-sans tracking-wide focus:outline-none focus:border-gold transition-colors duration-300"
 
   return (
     <section className="w-full bg-dark min-h-screen flex items-center">
-      <div className="w-full max-w-6xl mx-auto px-16 py-24 grid grid-cols-2 gap-24">
+      <div className="w-full max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 py-16 sm:py-24 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
 
         {/* Ліва частина */}
         <div className="flex flex-col justify-center">
           <p className="text-gold text-xs tracking-widest uppercase font-sans mb-4">
             Contact Us
           </p>
-          <h2 className="text-5xl font-serif text-white mb-8 leading-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-white mb-6 lg:mb-8 leading-tight">
             Let's Find Your<br />Perfect Home
           </h2>
-          <div className="w-12 h-px bg-gold mb-8" />
-          <p className="text-white/50 font-sans font-light leading-relaxed mb-12">
+          <div className="w-12 h-px bg-gold mb-6 lg:mb-8" />
+          <p className="text-white/50 font-sans font-light leading-relaxed mb-8 lg:mb-12 text-sm sm:text-base">
             Whether you're buying, selling, or just exploring — our team is ready to guide you every step of the way.
           </p>
 
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-5 sm:gap-6">
             <div>
               <p className="text-gold text-xs tracking-widest uppercase font-sans mb-1">Phone</p>
               <p className="text-white font-sans font-light">248-212-3333</p>
@@ -70,14 +69,14 @@ const handleSubmit = async (e) => {
         {/* Форма */}
         <div className="flex flex-col justify-center">
           {submitted ? (
-            <div className="text-center py-16">
+            <div className="text-center py-12 sm:py-16">
               <div className="w-16 h-px bg-gold mx-auto mb-8" />
               <p className="text-gold text-xs tracking-widest uppercase font-sans mb-4">Thank You</p>
-              <p className="text-white font-serif text-3xl">We'll be in touch soon.</p>
+              <p className="text-white font-serif text-2xl sm:text-3xl">We'll be in touch soon.</p>
               <div className="w-16 h-px bg-gold mx-auto mt-8" />
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-6 sm:gap-8">
               <input
                 type="text"
                 name="name"
@@ -115,7 +114,7 @@ const handleSubmit = async (e) => {
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-4 border border-gold text-gold px-8 py-4 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300 self-start cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="mt-2 sm:mt-4 border border-gold text-gold px-8 py-4 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300 w-full cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Sending...' : 'Send Message'}
               </button>
