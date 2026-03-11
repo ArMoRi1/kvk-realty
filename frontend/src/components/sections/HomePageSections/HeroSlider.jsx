@@ -38,6 +38,7 @@ function HeroSlider() {
   return (
     <div className="relative w-full h-screen overflow-hidden">
 
+      {/* Слайди */}
       {slides.map((slide, index) => (
         <div
           key={slide.id}
@@ -54,24 +55,27 @@ function HeroSlider() {
         </div>
       ))}
 
-      {/* Текст */}
-      <div className="absolute bottom-32 left-16 z-10">
-        <p className="text-gold tracking-widest text-xs font-sans uppercase mb-4">
+      {/* Текст — адаптивний */}
+      <div className="absolute bottom-24 sm:bottom-32 left-6 sm:left-16 z-10 max-w-[85vw] sm:max-w-2xl">
+        <p className="text-gold tracking-widest text-xs font-sans uppercase mb-3 sm:mb-4">
           KVK Realty Group
         </p>
-        <h1 className="text-7xl font-serif text-white mb-6 leading-tight">
+        <h1 className="text-4xl sm:text-5xl lg:text-7xl font-serif text-white mb-4 sm:mb-6 leading-tight">
           {slides[current].title}
         </h1>
-        <p className="text-white/70 tracking-widest text-sm font-sans uppercase mb-8">
+        <p className="text-white/70 tracking-widest text-xs sm:text-sm font-sans uppercase mb-6 sm:mb-8">
           {slides[current].subtitle}
         </p>
-        <Link to="/buy" className="border border-gold text-gold px-8 py-3 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300">
+        <Link
+          to="/buy"
+          className="border border-gold text-gold px-6 sm:px-8 py-3 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300 inline-block"
+        >
           Explore Properties
         </Link>
       </div>
 
       {/* Стрілки */}
-      <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-8 z-10">
+      <div className="absolute bottom-10 sm:bottom-16 left-1/2 -translate-x-1/2 flex gap-6 sm:gap-8 z-10">
         <button
           onClick={prev}
           className="text-white text-3xl hover:text-gold transition-colors duration-300"
@@ -87,7 +91,7 @@ function HeroSlider() {
       </div>
 
       {/* Індикатор слайдів */}
-      <div className="absolute bottom-8 left-16 flex gap-3 z-10">
+      <div className="absolute bottom-4 sm:bottom-8 left-6 sm:left-16 flex gap-3 z-10">
         {slides.map((_, index) => (
           <button
             key={index}
