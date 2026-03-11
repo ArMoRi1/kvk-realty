@@ -21,19 +21,19 @@ function TeamSlider() {
       <p className="text-gold text-xs tracking-widest uppercase font-sans">Loading...</p>
     </div>
   )
-  return (
-    <div className="w-full bg-dark py-24 px-16 border-t border-white/10">
 
-      <div className="text-center mb-16">
+  return (
+    <div className="w-full bg-dark py-16 sm:py-24 px-6 sm:px-10 lg:px-16 border-t border-white/10">
+
+      {/* Заголовок */}
+      <div className="text-center mb-10 sm:mb-16">
         <p className="text-gold text-xs tracking-widest uppercase font-sans mb-4">The People Behind KVK</p>
-        <h2 className="text-4xl font-serif text-white">Meet Our Team</h2>
+        <h2 className="text-3xl sm:text-4xl font-serif text-white">Meet Our Team</h2>
         <div className="w-12 h-px bg-gold mx-auto mt-6" />
       </div>
 
-      {/* Активний агент зі стрілками */}
-      <div className="flex items-center gap-8 mb-16 max-w-4xl mx-auto">
-
-        {/* Стрілка ліво */}
+      {/* ── ДЕСКТОП (lg+) — горизонтальний layout зі стрілками ── */}
+      <div className="hidden lg:flex items-center gap-8 mb-16 max-w-4xl mx-auto">
         <button
           onClick={prev}
           className="text-white/40 hover:text-gold transition-colors duration-300 text-7xl font-thin leading-none"
@@ -41,7 +41,6 @@ function TeamSlider() {
           ‹
         </button>
 
-        {/* Агент */}
         <div className="flex items-center gap-16 flex-1">
           <div className="relative">
             <img
@@ -62,18 +61,59 @@ function TeamSlider() {
           </div>
         </div>
 
-        {/* Стрілка право */}
         <button
           onClick={next}
           className="text-white/40 hover:text-gold transition-colors duration-300 text-7xl font-thin leading-none"
         >
           ›
         </button>
-
       </div>
 
-      {/* Міні аватари */}
-      <div className="flex justify-center gap-4 flex-wrap max-w-5xl mx-auto">
+      {/* ── МОБІЛЬНИЙ (< lg) — фото зверху, інфо знизу, стрілки по боках ── */}
+      <div className="lg:hidden mb-10">
+        <div className="flex items-center gap-4">
+
+          {/* Стрілка ліво */}
+          <button
+            onClick={prev}
+            className="text-white/40 hover:text-gold transition-colors duration-300 text-5xl font-thin leading-none flex-shrink-0"
+          >
+            ‹
+          </button>
+
+          {/* Фото + інфо */}
+          <div className="flex-1 flex flex-col items-center">
+            <div className="relative w-full max-w-xs mx-auto">
+              <img
+                src={agents[active].photo}
+                alt={agents[active].name}
+                className="w-full aspect-square object-cover object-top"
+              />
+              <div className="absolute inset-0 border border-gold/20" />
+            </div>
+            <div className="text-center mt-6">
+              <p className="text-gold text-xs tracking-widest uppercase font-sans mb-2">
+                {agents[active].role}
+              </p>
+              <h3 className="text-2xl font-serif text-white mb-4">
+                {agents[active].name}
+              </h3>
+              <div className="w-8 h-px bg-gold mx-auto" />
+            </div>
+          </div>
+
+          {/* Стрілка право */}
+          <button
+            onClick={next}
+            className="text-white/40 hover:text-gold transition-colors duration-300 text-5xl font-thin leading-none flex-shrink-0"
+          >
+            ›
+          </button>
+        </div>
+      </div>
+
+      {/* Міні аватари — однакові на всіх екранах */}
+      <div className="flex justify-center gap-3 sm:gap-4 flex-wrap max-w-5xl mx-auto">
         {agents.map((agent, index) => (
           <button
             key={agent.id}
@@ -87,7 +127,7 @@ function TeamSlider() {
             <img
               src={agent.photo}
               alt={agent.name}
-              className="w-16 h-16 object-cover"
+              className="w-12 h-12 sm:w-16 sm:h-16 object-cover object-top"
             />
             {index === active && (
               <div className="absolute inset-0 border border-gold" />
