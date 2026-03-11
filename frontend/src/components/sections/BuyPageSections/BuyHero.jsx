@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import heroPhoto from '../../../assets/img/Buy/HeroPhoto.avif'
+import heroPhoto from '../../../assets/img/Buy/HeroPhoto.webp'
 
 function BuyHero() {
   return (

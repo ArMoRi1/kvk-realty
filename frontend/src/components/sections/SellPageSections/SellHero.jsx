@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
+import heroPhoto from '../../../assets/img/Sell/HeroPhoto.webp'
 
 function SellHero() {
   return (
     <section className="relative w-full h-screen overflow-hidden">
       <img
-        src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1920&q=80"
+        src={heroPhoto}
         alt="Sell your home"
         className="w-full h-full object-cover"
       />
