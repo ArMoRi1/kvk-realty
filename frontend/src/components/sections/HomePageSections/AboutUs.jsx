@@ -90,9 +90,9 @@ function AboutUs() {
             About<br />KVK Realty Group
           </h2>
           <div className="w-12 h-px bg-gold mb-6 lg:mb-8" />
-          <p className="text-white/60 font-sans font-light leading-relaxed text-sm sm:text-base">
+          <p className="text-white/60 font-sans font-light leading-relaxed text-sm sm:text-base min-h-[120px] sm:min-h-[100px]">
             {bossDisplayed}
-            <span className="text-gold animate-pulse">|</span>
+            <span className={`text-gold animate-pulse ${bossDisplayed.length >= bossText.length ? 'hidden' : ''}`}>|</span>
           </p>
         </div>
       </div>
@@ -121,9 +121,9 @@ function AboutUs() {
             Our Team
           </p>
           <div className="w-12 h-px bg-gold mb-6 lg:mb-8" />
-          <p className="text-white/60 font-sans font-light leading-relaxed text-sm sm:text-base">
+          <p className="text-white/60 font-sans font-light leading-relaxed text-sm sm:text-base min-h-[120px] sm:min-h-[100px]">
             {teamDisplayed}
-            <span className="text-gold animate-pulse">|</span>
+            <span className={`text-gold animate-pulse ${teamDisplayed.length >= teamText.length ? 'hidden' : ''}`}>|</span>
           </p>
         </div>
       </div>
