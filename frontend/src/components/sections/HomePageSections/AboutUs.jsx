@@ -23,7 +23,7 @@ function AboutUs() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) setBossVisible(true) },
-      { threshold: 0.3 }
+      { threshold: 0.2 }
     )
     if (bossRef.current) observer.observe(bossRef.current)
     return () => observer.disconnect()
@@ -32,7 +32,7 @@ function AboutUs() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) setTeamVisible(true) },
-      { threshold: 0.3 }
+      { threshold: 0.2 }
     )
     if (teamRef.current) observer.observe(teamRef.current)
     return () => observer.disconnect()
@@ -63,47 +63,47 @@ function AboutUs() {
   return (
     <section className="w-full bg-dark pt-8">
 
-      {/* Блок 1 — Текст зліва, фото боса справа */}
+      {/* ── Блок 1 — Боss ── */}
       <div
         ref={bossRef}
-        className="grid grid-cols-[60fr_40fr] min-h-[600px]"
+        className="grid grid-cols-1 lg:grid-cols-[60fr_40fr] min-h-[500px] lg:min-h-[600px]"
       >
-        {/* Текст */}
-        <div className={`flex flex-col justify-center px-16 py-24 transition-all duration-1000 ${
-          bossVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'
-        }`}>
-          <p className="text-gold text-xs tracking-widest uppercase font-sans mb-4">
-            Founder & CEO
-          </p>
-          <h2 className="text-5xl font-serif text-white mb-8 leading-tight">
-            About<br />KVK Realty Group
-          </h2>
-          <div className="w-12 h-px bg-gold mb-8" />
-          <p className="text-white/60 font-sans font-light leading-relaxed text-base">
-            {bossDisplayed}
-            <span className="text-gold animate-pulse">|</span>
-          </p>
-        </div>
-
-        {/* Фото боса */}
-        <div className={`transition-all duration-1000 ${
+        {/* Фото боса — на мобільному першим */}
+        <div className={`px-6 sm:px-10 lg:px-0 lg:h-auto order-first lg:order-last transition-all duration-1000 ${
           bossVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'
         }`}>
           <img
             src={bossPhoto}
             alt="Founder & CEO"
-            className="w-full h-full object-cover"
+            className="w-full h-auto object-contain"
           />
+        </div>
+
+        {/* Текст — на мобільному другим */}
+        <div className={`flex flex-col justify-center px-6 sm:px-10 lg:px-16 py-12 lg:py-24 order-last lg:order-first transition-all duration-1000 ${
+          bossVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'
+        }`}>
+          <p className="text-gold text-xs tracking-widest uppercase font-sans mb-4">
+            Founder & CEO
+          </p>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-white mb-6 lg:mb-8 leading-tight">
+            About<br />KVK Realty Group
+          </h2>
+          <div className="w-12 h-px bg-gold mb-6 lg:mb-8" />
+          <p className="text-white/60 font-sans font-light leading-relaxed text-sm sm:text-base">
+            {bossDisplayed}
+            <span className="text-gold animate-pulse">|</span>
+          </p>
         </div>
       </div>
 
-      {/* Блок 2 — Фото команди зліва, текст справа і знизу */}
+      {/* ── Блок 2 — Team ── */}
       <div
         ref={teamRef}
-        className="grid grid-cols-[60fr_40fr]"
+        className="grid grid-cols-1 lg:grid-cols-[60fr_40fr]"
       >
-        {/* Фото команди */}
-        <div className={`transition-all duration-1000 ${
+        {/* Фото команди — на мобільному першим */}
+        <div className={`px-6 sm:px-10 lg:px-0 h-64 sm:h-80 lg:h-auto order-first lg:order-first transition-all duration-1000 ${
           teamVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'
         }`}>
           <img
@@ -113,20 +113,21 @@ function AboutUs() {
           />
         </div>
 
-        {/* Текст справа */}
-        <div className={`flex flex-col justify-center px-12 py-24 transition-all duration-1000 ${
+        {/* Текст — на мобільному другим */}
+        <div className={`flex flex-col justify-center px-6 sm:px-10 lg:px-12 py-12 lg:py-24 order-last lg:order-last transition-all duration-1000 ${
           teamVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'
         }`}>
           <p className="text-gold text-xs tracking-widest uppercase font-sans mb-4">
             Our Team
           </p>
-          <div className="w-12 h-px bg-gold mb-8" />
-          <p className="text-white/60 font-sans font-light leading-relaxed text-base">
+          <div className="w-12 h-px bg-gold mb-6 lg:mb-8" />
+          <p className="text-white/60 font-sans font-light leading-relaxed text-sm sm:text-base">
             {teamDisplayed}
             <span className="text-gold animate-pulse">|</span>
           </p>
         </div>
       </div>
+
       <TeamSlider />
     </section>
   )
