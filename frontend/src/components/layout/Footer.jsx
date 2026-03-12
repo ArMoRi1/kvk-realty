@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, Link } from 'react-router-dom'
 
 const navLinks = [
   { label: 'Home', path: '/' },
@@ -13,11 +13,11 @@ function Footer() {
     <footer className="bg-dark border-t border-white/10 py-12 px-6 sm:px-16">
 
       {/* Логотип по центру */}
-      <div className="text-center mb-8">
+      <Link to="/" className="text-center mb-8">
         <p className="text-[10px] xs:text-sm tracking-widest text-gold leading-none">THE</p>
         <p className="text-base xs:text-xl font-serif tracking-widest font-semibold leading-tight text-white">KVK REALTY GROUP</p>
         <p className="text-[10px] xs:text-sm tracking-widest text-gold mt-0.5">EST. 2017</p>
-      </div>
+      </Link>
 
       {/* Розділювач */}
       <div className="border-t border-white/10 mb-8" />

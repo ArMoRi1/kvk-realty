@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, Link } from 'react-router-dom'
 
 const navLinks = [
   { label: 'HOME', path: '/' },
@@ -32,11 +32,11 @@ function Navbar() {
       </div>
 
         {/* Логотип */}
-        <div className="absolute left-1/2 -translate-x-1/2 text-center text-white">
+        <Link to="/" className="absolute left-1/2 -translate-x-1/2 text-center text-white">
           <p className="text-[10px] xs:text-sm tracking-widest text-gold leading-none">THE</p>
           <p className="text-base xs:text-xl font-serif tracking-widest font-semibold leading-tight">KVK REALTY GROUP</p>
           <p className="text-[10px] xs:text-sm tracking-widest text-gold mt-0.5">EST. 2017</p>
-        </div>
+        </Link>
 
         {/* Праве меню — тільки desktop */}
         <ul className="hidden lg:flex gap-10 tracking-widest text-xs font-sans font-medium text-white">
