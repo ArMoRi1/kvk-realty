@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getAgents } from '../../../api/agents'
+import { getTeam } from '../../../api/team'
 
 function TeamSlider() {
   const [agents, setAgents] = useState([])
@@ -7,7 +7,7 @@ function TeamSlider() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    getAgents()
+    getTeam()
       .then(res => setAgents(res.data))
       .catch(err => console.error(err))
       .finally(() => setLoading(false))

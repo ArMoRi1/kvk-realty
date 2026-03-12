@@ -23,22 +23,26 @@ class BlogPost(models.Model):
     def __str__(self):
         return self.title
 
-class Agent(models.Model):
+
+class TeamMember(models.Model):
     name = models.CharField(max_length=100)
     role = models.CharField(max_length=100)
-    photo = models.ImageField(upload_to='agents/', blank=True)
+    photo = models.ImageField(upload_to='team/', blank=True)
     phone = models.CharField(max_length=20, blank=True)
     email = models.EmailField(blank=True)
     deals = models.IntegerField(default=0)
     experience = models.IntegerField(default=0)
+    is_agent = models.BooleanField(default=False)
+    order = models.IntegerField(default=0)
 
     class Meta:
-        ordering = ['name']
-        verbose_name = 'Agent'
-        verbose_name_plural = 'Agents'
+        ordering = ['order', 'name']
+        verbose_name = 'Team Member'
+        verbose_name_plural = 'Team Members'
 
     def __str__(self):
         return f"{self.name} — {self.role}"
+
 
 class ContactRequest(models.Model):
     name = models.CharField(max_length=100)

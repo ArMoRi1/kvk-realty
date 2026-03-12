@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ContactRequest, Agent, BlogPost
+from .models import ContactRequest, TeamMember, BlogPost
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
@@ -17,7 +17,11 @@ class ContactRequestAdmin(admin.ModelAdmin):
     readonly_fields = ('name', 'email', 'phone', 'message', 'created_at')
     ordering = ('-created_at',)
 
-@admin.register(Agent)
-class AgentAdmin(admin.ModelAdmin):
-    list_display = ('name', 'role', 'phone', 'email', 'deals', 'experience')
+@admin.register(TeamMember)
+class TeamMemberAdmin(admin.ModelAdmin):
+    list_display = ('order', 'name', 'role', 'is_agent', 'phone', 'email', 'deals', 'experience')
+    list_display_links = ('name',)
+    list_filter = ('is_agent',)
+    list_editable = ('order', 'is_agent')
     search_fields = ('name', 'role', 'email')
+    ordering = ('order', 'name')

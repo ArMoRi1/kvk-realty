@@ -3,7 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import ContactRequest, Agent, BlogPost
+from .models import ContactRequest, TeamMember, BlogPost
+
 
 @api_view(['GET'])
 def blog_list(request):
@@ -20,6 +21,7 @@ def blog_list(request):
             'text': post.text,
         })
     return Response(data)
+
 
 @api_view(['GET'])
 def blog_detail(request, pk):
@@ -39,9 +41,31 @@ def blog_detail(request, pk):
     }
     return Response(data)
 
+
+@api_view(['GET'])
+def team_list(request):
+    """Всі члени команди — для TeamSlider на HomePage"""
+    members = TeamMember.objects.all()
+    data = []
+    for member in members:
+        data.append({
+            'id': member.id,
+            'name': member.name,
+            'role': member.role,
+            'photo': request.build_absolute_uri(member.photo.url) if member.photo else None,
+            'phone': member.phone,
+            'email': member.email,
+            'deals': member.deals,
+            'experience': member.experience,
+            'is_agent': member.is_agent,
+        })
+    return Response(data)
+
+
 @api_view(['GET'])
 def agents_list(request):
-    agents = Agent.objects.all()
+    """Тільки агенти (is_agent=True) — для AgentsHero"""
+    agents = TeamMember.objects.filter(is_agent=True)
     data = []
     for agent in agents:
         data.append({
@@ -54,7 +78,8 @@ def agents_list(request):
             'deals': agent.deals,
             'experience': agent.experience,
         })
-    return Response(data)   
+    return Response(data)
+
 
 @api_view(['POST'])
 def contact(request):
@@ -72,7 +97,6 @@ def contact(request):
             status=status.HTTP_400_BAD_REQUEST
         )
 
-    # Зберігаємо в БД
     ContactRequest.objects.create(
         name=name,
         email=email,
@@ -82,7 +106,6 @@ def contact(request):
         agent_email=agent_email,
     )
 
-    # Формуємо лист
     agent_line = f"Agent:   {agent_name} ({agent_email})" if agent_name else "Source:  General Contact Form"
 
     subject = f'New Contact Request — {name}'
@@ -96,7 +119,6 @@ Message: {message or '—'}
 {agent_line}
     """.strip()
 
-    # Отримувачі — бос завжди + агент якщо є
     recipients = [settings.CONTACT_EMAIL]
     if agent_email:
         recipients.append(agent_email)
