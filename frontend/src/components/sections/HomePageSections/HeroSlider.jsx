@@ -3,15 +3,15 @@ import { Link } from 'react-router-dom'
 
 import video1 from '../../../assets/video/hero1.mp4'
 import video2 from '../../../assets/video/hero2.mp4'
-// import video3 from '../../../assets/video/hero3.mp4'
-// import video4 from '../../../assets/video/hero4.mp4'
-// import video5 from '../../../assets/video/hero5.mp4'
+import video3 from '../../../assets/video/hero3.mp4'
+import video4 from '../../../assets/video/hero4.mp4'
+import video5 from '../../../assets/video/hero5.mp4'
 
 import poster1 from '../../../assets/video/hero1-poster.jpg'
 import poster2 from '../../../assets/video/hero2-poster.jpg'
-// import poster3 from '../../../assets/video/hero3-poster.jpg'
-// import poster4 from '../../../assets/video/hero4-poster.jpg'
-// import poster5 from '../../../assets/video/hero5-poster.jpg'
+import poster3 from '../../../assets/video/hero3-poster.jpg'
+import poster4 from '../../../assets/video/hero4-poster.jpg'
+import poster5 from '../../../assets/video/hero5-poster.jpg'
 
 const slides = [
   {
@@ -28,9 +28,9 @@ const slides = [
     title: 'Where Families Belong',
     subtitle: 'Discover the best suburbs of Detroit',
   },
-  // { id: 3, video: video3, poster: poster3, title: 'Your New Beginning', subtitle: 'We help you find the perfect place to call home' },
-  // { id: 4, video: video4, poster: poster4, title: 'Your Title Here', subtitle: 'Your subtitle here' },
-  // { id: 5, video: video5, poster: poster5, title: 'Your Title Here', subtitle: 'Your subtitle here' },
+  { id: 3, video: video3, poster: poster3, title: 'Your New Beginning', subtitle: 'We help you find the perfect place to call home' },
+  { id: 4, video: video4, poster: poster4, title: 'Your Title Here', subtitle: 'Your subtitle here' },
+  { id: 5, video: video5, poster: poster5, title: 'Your Title Here', subtitle: 'Your subtitle here' },
 ]
 
 function HeroSlider() {
