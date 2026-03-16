@@ -3,6 +3,7 @@ import { LISTINGS } from '../../mocks/properties'
 import BuyFilters from '../../components/sections/BuyPageSections/BuyFilters'
 import BuyListings from '../../components/sections/BuyPageSections/BuyListings'
 import BuyMap from '../../components/sections/BuyPageSections/BuyMap'
+import PropertyModal from '../../components/ui/PropertyModal'
 
 function BuyPage() {
   const [search, setSearch]       = useState('')
@@ -15,6 +16,7 @@ function BuyPage() {
   const [minSqft, setMinSqft]     = useState('')
   const [maxSqft, setMaxSqft]     = useState('')
   const [activeId, setActiveId]   = useState(null)
+  const [modalListing, setModalListing] = useState(null)
 
   const activeFiltersCount = [
     status !== 'all', type !== 'all',
@@ -44,7 +46,10 @@ function BuyPage() {
     return true
   }), [search, status, type, minPrice, maxPrice, minBeds, minBaths, minSqft, maxSqft])
 
-  const handleCardClick = (id) => setActiveId(prev => prev === id ? null : id)
+  const handleCardClick = (id) => {
+    setActiveId(prev => prev === id ? null : id)
+    setModalListing(LISTINGS.find(l => l.id === id) || null)
+  }
 
   return (
     <div className="w-full min-h-screen bg-dark flex flex-col pt-[72px]">
@@ -73,6 +78,14 @@ function BuyPage() {
         />
         <BuyMap listings={filtered} activeId={activeId} />
       </div>
+
+      <PropertyModal
+        listing={modalListing}
+        onClose={() => {
+          setModalListing(null)
+          setActiveId(null)
+        }}
+      />
 
     </div>
   )
