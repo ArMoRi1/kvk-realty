@@ -64,7 +64,7 @@ function BuyPage() {
         onClear={clearAll}
       />
 
-      <div className="flex flex-1 overflow-hidden" style={{ height: 'calc(100vh - 72px - 57px)' }}>
+      <div className="flex overflow-hidden" style={{ height: 'calc(100vh - 72px - 57px)' }}>
         <BuyListings
           listings={filtered}
           activeId={activeId}

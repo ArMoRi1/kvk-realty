@@ -15,7 +15,7 @@ const PIN_POSITIONS = [
 
 function BuyMap({ listings, activeId }) {
   return (
-    <div className="hidden lg:block w-1/2 h-full sticky top-0">
+    <div className="hidden lg:block w-1/2 h-full">
       <div className="relative w-full h-full bg-dark-muted overflow-hidden">
 
         {/* Сітка */}
@@ -41,8 +41,8 @@ function BuyMap({ listings, activeId }) {
         </svg>
 
         {/* Піни */}
-        {listings.map((l, i) => {
-          const pos = PIN_POSITIONS[i % PIN_POSITIONS.length]
+        {listings.map((l) => {
+          const pos = PIN_POSITIONS[(l.id - 1) % PIN_POSITIONS.length]
           const isActive = l.id === activeId
           return (
             <div
