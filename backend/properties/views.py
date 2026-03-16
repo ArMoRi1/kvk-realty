@@ -3,8 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import ContactRequest, TeamMember, BlogPost
-
+from .models import ContactRequest, TeamMember, BlogPost, Review
 
 @api_view(['GET'])
 def blog_list(request):
@@ -138,3 +137,30 @@ Message: {message or '—'}
         )
 
     return Response({'success': True}, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+def reviews_list(request):
+    agent_id = request.GET.get('agent')
+    page = int(request.GET.get('page', 1))
+    per_page = int(request.GET.get('per_page', 6))
+
+    reviews = Review.objects.filter(is_published=True)
+    if agent_id:
+        reviews = reviews.filter(agent_id=agent_id)
+
+    total = reviews.count()
+    start = (page - 1) * per_page
+    end = start + per_page
+    reviews = reviews[start:end]
+
+    data = [{
+        'id': r.id,
+        'author': r.author,
+        'text': r.text,
+        'rating': r.rating,
+        'agent_name': r.agent.name if r.agent else None,
+        'agent_id': r.agent.id if r.agent else None,
+        'created_at': r.created_at.strftime('%B %d, %Y'),
+    } for r in reviews]
+
+    return Response({'results': data, 'total': total, 'page': page, 'per_page': per_page})

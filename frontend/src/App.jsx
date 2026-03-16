@@ -7,6 +7,7 @@ import SellPage from './pages/SellPage/SellPage'
 import AgentsPage from './pages/AgentsPage/AgentsPage'
 import BlogPage from './pages/BlogPage/BlogPage'
 import BlogPostPage from './pages/BlogPage/BlogPostPage'
+import ReviewsPage from './pages/ReviewsPage/ReviewsPage'
 
 function App() {
 
@@ -29,6 +30,7 @@ useEffect(() => {
           <Route path="sell" element={<SellPage />} />
           <Route path="blog" element={<BlogPage />} />
           <Route path="blog/:id" element={<BlogPostPage />} />
+          <Route path="reviews" element={<ReviewsPage />} />
         </Route>
 
         <Route path="/agents" element={<AgentsPage />} />

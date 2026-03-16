@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { getAgents } from '../../../api/agents'
 import ContactAgentModal from '../../ui/ContactAgentModal'
 import { useCountUp } from '../../../hooks/useCountUp'
 import { useInView } from '../../../hooks/useInView'
+import AgentReviews from './AgentReviews'
 
 /* ─── Skeleton пульсуючий блок ─── */
 function Skeleton({ className }) {
@@ -146,6 +147,8 @@ function AgentsHero() {
             >
               Contact Agent
             </button>
+
+            <AgentReviews agentId={selected.id} />
           </div>
         </div>
       </div>
@@ -199,7 +202,7 @@ function AgentsHero() {
         </div>
 
         {/* ===== ПРАВА КОЛОНКА — інфо ===== */}
-        <div className="border-l border-white/10 h-[calc(100vh-96px)] sticky top-24 overflow-y-auto flex flex-col justify-center px-10 py-10">
+        <div className="border-l border-white/10 h-[calc(100vh-96px)] sticky top-24 overflow-y-auto flex flex-col justify-start px-10 py-10">
           <p className="text-gold text-xs tracking-widest uppercase font-sans mb-2">{selected.role}</p>
           <h2 className="text-4xl font-serif text-white mb-4 leading-tight">{selected.name}</h2>
           <div className="w-8 h-px bg-gold mb-8" />
@@ -232,10 +235,12 @@ function AgentsHero() {
 
           <button
             onClick={() => setModalOpen(true)}
-            className="border border-gold text-gold px-8 py-3 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300 self-start"
+            className="border border-gold text-gold px-8 py-3 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300 self-start mb-2"
           >
             Contact Agent
           </button>
+
+          <AgentReviews agentId={selected.id} />
         </div>
       </div>
 

@@ -61,3 +61,24 @@ class ContactRequest(models.Model):
 
     def __str__(self):
         return f"{self.name} — {self.email} ({self.created_at.strftime('%d.%m.%Y %H:%M')})"
+    
+class Review(models.Model):
+    author = models.CharField(max_length=100)
+    text = models.TextField()
+    rating = models.IntegerField(default=5)
+    agent = models.ForeignKey(
+        TeamMember,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name='reviews'
+    )
+    is_published = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Review'
+        verbose_name_plural = 'Reviews'
+
+    def __str__(self):
+        return f"{self.author} — {self.rating}★"

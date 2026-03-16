@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ContactRequest, TeamMember, BlogPost
+from .models import ContactRequest, TeamMember, BlogPost, Review
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
@@ -25,3 +25,11 @@ class TeamMemberAdmin(admin.ModelAdmin):
     list_editable = ('order', 'is_agent')
     search_fields = ('name', 'role', 'email')
     ordering = ('order', 'name')
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('author', 'rating', 'agent', 'is_published', 'created_at')
+    list_filter = ('is_published', 'rating', 'agent')
+    list_editable = ('is_published',)
+    search_fields = ('author', 'text')
+    ordering = ('-created_at',)
