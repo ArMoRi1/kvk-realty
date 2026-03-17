@@ -55,6 +55,9 @@ def team_list(request):
             'phone': member.phone,
             'email': member.email,
             'deals': member.deals,
+            'total_volume': member.total_volume,
+            'bio': member.bio,
+            'motto': member.motto,
             'experience': member.experience,
             'is_agent': member.is_agent,
         })
@@ -75,6 +78,9 @@ def agents_list(request):
             'phone': agent.phone,
             'email': agent.email,
             'deals': agent.deals,
+            'total_volume': agent.total_volume,
+            'bio': agent.bio,
+            'motto': agent.motto,
             'experience': agent.experience,
         })
     return Response(data)

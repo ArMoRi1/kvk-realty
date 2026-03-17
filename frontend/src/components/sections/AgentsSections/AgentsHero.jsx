@@ -115,6 +115,7 @@ function AgentsHero() {
             <h2 className="text-lg font-serif text-white mb-2 leading-tight">{selected.name}</h2>
             <div className="w-6 h-px bg-gold mb-3" />
 
+            {/* Stats */}
             <div className="flex gap-5 mb-3">
               <div>
                 <p className="text-xl font-serif text-white">
@@ -128,7 +129,34 @@ function AgentsHero() {
                 </p>
                 <p className="text-white/40 text-xs tracking-widest uppercase font-sans mt-0.5">Years</p>
               </div>
+              {selected.total_volume > 0 && (
+                <div>
+                  <p className="text-xl font-serif text-white">
+                    ${(selected.total_volume / 1_000_000).toFixed(1)}M
+                  </p>
+                  <p className="text-white/40 text-xs tracking-widest uppercase font-sans mt-0.5">Volume</p>
+                </div>
+              )}
             </div>
+
+            {/* Motto */}
+            {selected.motto && (
+              <div className="mb-3 border-l-2 border-gold pl-3">
+                <p className="text-white/50 font-sans font-light italic text-xs leading-relaxed">
+                  "{selected.motto}"
+                </p>
+              </div>
+            )}
+
+            {/* Bio */}
+            {selected.bio && (
+              <div className="mb-3">
+                <p className="text-gold text-xs tracking-widest uppercase font-sans mb-1">About</p>
+                <p className="text-white/50 font-sans font-light text-xs leading-relaxed">
+                  {selected.bio}
+                </p>
+              </div>
+            )}
 
             <div className="flex flex-col gap-2 mb-4">
               <div>
@@ -207,7 +235,8 @@ function AgentsHero() {
           <h2 className="text-4xl font-serif text-white mb-4 leading-tight">{selected.name}</h2>
           <div className="w-8 h-px bg-gold mb-8" />
 
-          <div className="flex gap-10 mb-8">
+          {/* Stats */}
+          <div className="flex gap-8 mb-8 flex-wrap">
             <div>
               <p className="text-4xl font-serif text-white">
                 <CountUp value={selected.deals} />
@@ -220,8 +249,36 @@ function AgentsHero() {
               </p>
               <p className="text-white/40 text-xs tracking-widest uppercase font-sans mt-1">Years Experience</p>
             </div>
+            {selected.total_volume > 0 && (
+              <div>
+                <p className="text-4xl font-serif text-white">
+                  ${(selected.total_volume / 1_000_000).toFixed(1)}M
+                </p>
+                <p className="text-white/40 text-xs tracking-widest uppercase font-sans mt-1">Total Volume</p>
+              </div>
+            )}
           </div>
 
+          {/* Motto */}
+          {selected.motto && (
+            <div className="mb-8 border-l-2 border-gold pl-4">
+              <p className="text-white/50 font-sans font-light italic text-sm leading-relaxed">
+                "{selected.motto}"
+              </p>
+            </div>
+          )}
+
+          {/* Bio */}
+          {selected.bio && (
+            <div className="mb-8">
+              <p className="text-gold text-xs tracking-widest uppercase font-sans mb-2">About</p>
+              <p className="text-white/50 font-sans font-light text-sm leading-relaxed">
+                {selected.bio}
+              </p>
+            </div>
+          )}
+
+          {/* Контакти */}
           <div className="flex flex-col gap-4 mb-10">
             <div>
               <p className="text-gold text-xs tracking-widest uppercase font-sans mb-1">Phone</p>

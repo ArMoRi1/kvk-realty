@@ -32,6 +32,9 @@ class TeamMember(models.Model):
     email = models.EmailField(blank=True)
     deals = models.IntegerField(default=0)
     experience = models.IntegerField(default=0)
+    total_volume = models.BigIntegerField(default=0)
+    bio = models.TextField(blank=True)                
+    motto = models.CharField(max_length=255, blank=True)  
     is_agent = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
 
