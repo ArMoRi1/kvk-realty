@@ -190,7 +190,7 @@ function AgentsHero() {
         </div>
 
         {/* ===== ЦЕНТРАЛЬНА КОЛОНКА — велике фото ===== */}
-        <div className="h-[calc(100vh-96px)] sticky top-24 overflow-hidden bg-dark-soft relative wide:py-8 wide:px-8">
+        <div className="h-[calc(100vh-96px)] sticky top-24 overflow-hidden bg-dark relative wide:py-8 wide:px-8">
           <FadeImage
             src={selected.photo}
             alt={selected.name}
