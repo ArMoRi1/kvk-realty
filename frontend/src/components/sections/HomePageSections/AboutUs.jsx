@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import TeamSlider from './TeamSlider'
 
 import bossPhoto from '../../../assets/img/AboutUs/boss.webp'
-import teamPhoto from '../../../assets/img/AboutUs/team.webp'
+import teamPhoto from '../../../assets/img/AboutUs/IMG_8299.JPG'
 
 const bossText = `KVK Realty Group was founded with one simple belief — everyone deserves a home they're proud of. 
 Our founder brings years of experience in Metro Detroit real estate, deep knowledge of every suburb, 
