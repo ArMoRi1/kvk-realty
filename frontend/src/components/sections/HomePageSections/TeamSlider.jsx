@@ -32,48 +32,84 @@ function TeamSlider() {
         <div className="w-12 h-px bg-gold mx-auto mt-6" />
       </div>
 
-      {/* ── ДЕСКТОП (lg+) — горизонтальний layout зі стрілками ── */}
-      <div className="hidden lg:flex items-center gap-8 mb-16 max-w-4xl mx-auto">
+      {/* ── ДЕСКТОП (lg+) ── */}
+      <div className="hidden lg:flex items-center gap-6 mb-16 max-w-6xl mx-auto">
+
         <button
           onClick={prev}
-          className="text-white/40 hover:text-gold transition-colors duration-300 text-7xl font-thin leading-none"
+          className="text-white/40 hover:text-gold transition-colors duration-300 text-7xl font-thin leading-none flex-shrink-0"
         >
           ‹
         </button>
 
         <div className="flex items-center gap-16 flex-1">
-          <div className="relative">
+
+          {/* Фото */}
+          <div className="relative flex-shrink-0">
             <img
               src={agents[active].photo}
               alt={agents[active].name}
-              className="w-64 h-80 object-cover"
+              className="w-80 h-96 object-cover object-top"
             />
             <div className="absolute inset-0 border border-gold/20" />
           </div>
-          <div>
+
+          {/* Текст */}
+          <div className="flex flex-col justify-center flex-1">
+
+            {/* Мотто */}
+            {agents[active].motto && (
+              <p className="text-white/40 font-sans font-light italic text-lg leading-relaxed mb-6">
+                "{agents[active].motto}"
+              </p>
+            )}
+
             <p className="text-gold text-xs tracking-widest uppercase font-sans mb-3">
               {agents[active].role}
             </p>
-            <h3 className="text-4xl font-serif text-white mb-6">
+            <h3 className="text-5xl font-serif text-white mb-6 leading-tight">
               {agents[active].name}
             </h3>
-            <div className="w-8 h-px bg-gold" />
+            <div className="w-8 h-px bg-gold mb-6" />
+
+            {/* Статистика */}
+            <div className="flex gap-10">
+              {agents[active].deals > 0 && (
+                <div>
+                  <p className="text-3xl font-serif text-white">{agents[active].deals}</p>
+                  <p className="text-white/40 text-xs tracking-widest uppercase font-sans mt-1">Deals</p>
+                </div>
+              )}
+              {agents[active].experience > 0 && (
+                <div>
+                  <p className="text-3xl font-serif text-white">{agents[active].experience}</p>
+                  <p className="text-white/40 text-xs tracking-widest uppercase font-sans mt-1">Years</p>
+                </div>
+              )}
+              {agents[active].total_volume > 0 && (
+                <div>
+                  <p className="text-3xl font-serif text-white">
+                    ${(agents[active].total_volume / 1_000_000).toFixed(1)}M
+                  </p>
+                  <p className="text-white/40 text-xs tracking-widest uppercase font-sans mt-1">Volume</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
         <button
           onClick={next}
-          className="text-white/40 hover:text-gold transition-colors duration-300 text-7xl font-thin leading-none"
+          className="text-white/40 hover:text-gold transition-colors duration-300 text-7xl font-thin leading-none flex-shrink-0"
         >
           ›
         </button>
       </div>
 
-      {/* ── МОБІЛЬНИЙ (< lg) — фото зверху, інфо знизу, стрілки по боках ── */}
+      {/* ── МОБІЛЬНИЙ (< lg) ── */}
       <div className="lg:hidden mb-10">
         <div className="flex items-center gap-4">
 
-          {/* Стрілка ліво */}
           <button
             onClick={prev}
             className="text-white/40 hover:text-gold transition-colors duration-300 text-5xl font-thin leading-none flex-shrink-0"
@@ -81,7 +117,6 @@ function TeamSlider() {
             ‹
           </button>
 
-          {/* Фото + інфо */}
           <div className="flex-1 flex flex-col items-center">
             <div className="relative w-full max-w-xs mx-auto">
               <img
@@ -92,6 +127,11 @@ function TeamSlider() {
               <div className="absolute inset-0 border border-gold/20" />
             </div>
             <div className="text-center mt-6">
+              {agents[active].motto && (
+                <p className="text-white/40 font-sans font-light italic text-sm leading-relaxed mb-3 px-4">
+                  "{agents[active].motto}"
+                </p>
+              )}
               <p className="text-gold text-xs tracking-widest uppercase font-sans mb-2">
                 {agents[active].role}
               </p>
@@ -102,7 +142,6 @@ function TeamSlider() {
             </div>
           </div>
 
-          {/* Стрілка право */}
           <button
             onClick={next}
             className="text-white/40 hover:text-gold transition-colors duration-300 text-5xl font-thin leading-none flex-shrink-0"
@@ -112,8 +151,8 @@ function TeamSlider() {
         </div>
       </div>
 
-      {/* Міні аватари — однакові на всіх екранах */}
-      <div className="flex justify-center gap-3 sm:gap-4 flex-wrap max-w-5xl mx-auto">
+      {/* Міні аватари */}
+      <div className="flex justify-center gap-3 sm:gap-4 flex-wrap max-w-6xl mx-auto">
         {agents.map((agent, index) => (
           <button
             key={agent.id}
