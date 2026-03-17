@@ -13,7 +13,7 @@ const PIN_POSITIONS = [
   { top: '40%', left: '15%' },
 ]
 
-function BuyMap({ listings, activeId }) {
+function BuyMap({ listings, activeId, onPinClick }) {
   return (
     <div className="hidden lg:block w-1/2 h-full">
       <div className="relative w-full h-full bg-dark-muted overflow-hidden">
@@ -49,6 +49,7 @@ function BuyMap({ listings, activeId }) {
               key={l.id}
               className="absolute -translate-x-1/2 -translate-y-full transition-all duration-300 cursor-pointer z-10"
               style={{ top: pos.top, left: pos.left }}
+              onClick={() => onPinClick(l.id)}
             >
               <div className={`px-2 py-1 text-[10px] font-sans font-semibold whitespace-nowrap shadow-lg transition-all duration-300 ${
                 isActive

@@ -76,7 +76,14 @@ function BuyPage() {
           onCardClick={handleCardClick}
           onClear={clearAll}
         />
-        <BuyMap listings={filtered} activeId={activeId} />
+        <BuyMap 
+        listings={filtered}
+        activeId={activeId}
+        onPinClick={(id) => {
+          setActiveId(id)
+          setModalListing(LISTINGS.find(l => l.id === id) || null)
+        }}
+        />
       </div>
 
       <PropertyModal
