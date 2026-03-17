@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { getReviews } from '../../api/reviews'
 import { Star } from 'lucide-react'
+import ReviewForm from '../../components/ui/ReviewForm'
 
 const PER_PAGE = 6
 
@@ -53,7 +54,6 @@ function ReviewsPage() {
     setPage(p => p + 1)
   }, [loading, hasMore])
 
-  // Завантаження при зміні page
   useEffect(() => {
     setLoading(true)
     getReviews({ page, per_page: PER_PAGE })
@@ -68,7 +68,6 @@ function ReviewsPage() {
       })
   }, [page])
 
-  // IntersectionObserver для infinite scroll
   useEffect(() => {
     const el = loaderRef.current
     if (!el) return
@@ -96,7 +95,6 @@ function ReviewsPage() {
           )}
         </div>
 
-        {/* Початковий лоадер */}
         {initialLoading ? (
           <div className="flex items-center justify-center py-24">
             <p className="text-gold text-xs tracking-widest uppercase font-sans">Loading...</p>
@@ -109,14 +107,12 @@ function ReviewsPage() {
           </div>
         ) : (
           <>
-            {/* Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {reviews.map(review => (
                 <ReviewCard key={review.id} review={review} />
               ))}
             </div>
 
-            {/* Infinite scroll trigger */}
             <div ref={loaderRef} className="flex justify-center mt-12">
               {loading && (
                 <p className="text-gold text-xs tracking-widest uppercase font-sans">Loading...</p>
@@ -130,6 +126,11 @@ function ReviewsPage() {
             </div>
           </>
         )}
+
+        {/* Форма внизу */}
+        <div className="mt-24 max-w-2xl mx-auto">
+          <ReviewForm mode="inline" />
+        </div>
 
       </div>
     </div>

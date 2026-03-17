@@ -4,6 +4,7 @@ import ContactAgentModal from '../../ui/ContactAgentModal'
 import { useCountUp } from '../../../hooks/useCountUp'
 import { useInView } from '../../../hooks/useInView'
 import AgentReviews from './AgentReviews'
+import ReviewForm from '../../ui/ReviewForm'
 
 /* ─── Skeleton пульсуючий блок ─── */
 function Skeleton({ className }) {
@@ -40,6 +41,7 @@ function AgentsHero() {
   const [selected, setSelected] = useState(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [reviewModalOpen, setReviewModalOpen] = useState(false)
 
   useEffect(() => {
     getAgents()
@@ -171,9 +173,16 @@ function AgentsHero() {
 
             <button
               onClick={() => setModalOpen(true)}
-              className="border border-gold text-gold px-4 py-2 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300 self-start"
+              className="border border-gold text-gold px-4 py-2 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300 self-start w-full"
             >
               Contact Agent
+            </button>
+
+            <button
+              onClick={() => setReviewModalOpen(true)}
+              className="border border-white/20 text-white/50 px-8 py-3 text-xs tracking-widest font-sans uppercase hover:border-gold hover:text-gold transition-all duration-300 self-start w-full mt-2"
+            >
+              Leave a Review
             </button>
 
             <AgentReviews agentId={selected.id} />
@@ -297,6 +306,13 @@ function AgentsHero() {
             Contact Agent
           </button>
 
+          <button
+          onClick={() => setReviewModalOpen(true)}
+          className="border border-white/20 text-white/50 px-8 py-3 text-xs tracking-widest font-sans uppercase hover:border-gold hover:text-gold transition-all duration-300 self-start mb-8"
+          >
+            Leave a Review
+          </button>
+
           <AgentReviews agentId={selected.id} />
         </div>
       </div>
@@ -307,7 +323,13 @@ function AgentsHero() {
           onClose={() => setModalOpen(false)}
         />
       )}
-
+      {reviewModalOpen && (
+        <ReviewForm
+          mode="modal"
+          preselectedAgentId={selected.id}
+          onClose={() => setReviewModalOpen(false)}
+        />
+      )}
     </div>
   )
 }

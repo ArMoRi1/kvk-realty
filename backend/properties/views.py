@@ -170,3 +170,34 @@ def reviews_list(request):
     } for r in reviews]
 
     return Response({'results': data, 'total': total, 'page': page, 'per_page': per_page})
+
+@api_view(['POST'])
+def review_create(request):
+    data = request.data
+    author = data.get('author', '').strip()
+    text = data.get('text', '').strip()
+    rating = data.get('rating', 5)
+    agent_id = data.get('agent_id')
+
+    if not author or not text:
+        return Response(
+            {'error': 'Author and text are required'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    agent = None
+    if agent_id:
+        try:
+            agent = TeamMember.objects.get(pk=agent_id, is_agent=True)
+        except TeamMember.DoesNotExist:
+            pass
+
+    Review.objects.create(
+        author=author,
+        text=text,
+        rating=int(rating),
+        agent=agent,
+        is_published=False,
+    )
+
+    return Response({'success': True}, status=status.HTTP_201_CREATED)

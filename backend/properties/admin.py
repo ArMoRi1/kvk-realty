@@ -33,3 +33,9 @@ class ReviewAdmin(admin.ModelAdmin):
     list_editable = ('is_published',)
     search_fields = ('author', 'text')
     ordering = ('-created_at',)
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'agent':
+            kwargs['queryset'] = TeamMember.objects.filter(is_agent=True)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    
