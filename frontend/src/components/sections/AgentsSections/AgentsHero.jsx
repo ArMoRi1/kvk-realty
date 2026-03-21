@@ -46,8 +46,11 @@ function AgentsHero() {
   useEffect(() => {
     getAgents()
       .then(res => {
-        setAgents(res.data)
-        setSelected(res.data[0])
+        const data = res.data
+        const offset = Math.floor(Date.now() / 86400000) % data.length
+        const rotated = [...data.slice(offset), ...data.slice(0, offset)]
+        setAgents(rotated)
+        setSelected(rotated[0])
       })
       .catch(err => console.error(err))
       .finally(() => setLoading(false))
