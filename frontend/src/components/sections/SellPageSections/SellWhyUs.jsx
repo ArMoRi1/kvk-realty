@@ -21,7 +21,7 @@ function SellWhyUs() {
   return (
     <section className="w-full bg-dark py-16 sm:py-24 px-6 sm:px-10 lg:px-16 border-t border-white/10">
       <div className="text-center mb-12 sm:mb-16">
-        <p className="text-gold text-xs tracking-widest uppercase font-sans mb-4">
+        <p className="text-gold text-base tracking-widest uppercase font-sans mb-4">
           Why KVK
         </p>
         <h2 className="text-3xl sm:text-4xl font-serif text-white">Why Sell With Us</h2>
@@ -35,9 +35,9 @@ function SellWhyUs() {
             className="border border-white/10 p-6 sm:p-8 hover:border-gold transition-all duration-300"
           >
             <p className="text-gold font-serif text-4xl mb-4">0{index + 1}</p>
-            <h3 className="text-white font-serif text-lg mb-3">{r.title}</h3>
+            <h3 className="text-white font-serif text-xl mb-3">{r.title}</h3>
             <div className="w-6 h-px bg-gold mb-4" />
-            <p className="text-white/40 font-sans font-light text-sm leading-relaxed">{r.desc}</p>
+            <p className="text-white/40 font-sans font-light text-base leading-relaxed">{r.desc}</p>
           </div>
         ))}
       </div>

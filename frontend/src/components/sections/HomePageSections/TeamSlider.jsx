@@ -27,7 +27,7 @@ function TeamSlider() {
 
       {/* Заголовок */}
       <div className="text-center mb-10 sm:mb-16">
-        <p className="text-gold text-xs tracking-widest uppercase font-sans mb-4">The People Behind KVK</p>
+        <p className="text-gold text-sm tracking-widest uppercase font-sans mb-4">The People Behind KVK</p>
         <h2 className="text-3xl sm:text-4xl font-serif text-white">Meet Our Team</h2>
         <div className="w-12 h-px bg-gold mx-auto mt-6" />
       </div>

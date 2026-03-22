@@ -83,14 +83,14 @@ function AboutUs() {
         <div className={`flex flex-col justify-center px-6 sm:px-10 lg:px-16 py-12 lg:py-24 order-last lg:order-first transition-all duration-1000 ${
           bossVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'
         }`}>
-          <p className="text-gold text-xs tracking-widest uppercase font-sans mb-4">
+          <p className="text-gold text-sm tracking-widest uppercase font-sans mb-4">
             Founder & CEO
           </p>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-white mb-6 lg:mb-8 leading-tight">
             About<br />KVK Realty Group
           </h2>
           <div className="w-12 h-px bg-gold mb-6 lg:mb-8" />
-          <p className="text-white/60 font-sans font-light leading-relaxed text-sm sm:text-base min-h-[120px] sm:min-h-[100px]">
+          <p className="text-white/60 font-sans font-light leading-relaxed text-sm sm:text-lg min-h-[120px] sm:min-h-[100px]">
             {bossDisplayed}
             <span className={`text-gold animate-pulse ${bossDisplayed.length >= bossText.length ? 'hidden' : ''}`}>|</span>
           </p>
@@ -117,11 +117,11 @@ function AboutUs() {
         <div className={`flex flex-col justify-center px-6 sm:px-10 lg:px-12 py-12 lg:py-24 order-last lg:order-last transition-all duration-1000 ${
           teamVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'
         }`}>
-          <p className="text-gold text-xs tracking-widest uppercase font-sans mb-4">
+          <p className="text-gold text-sm tracking-widest uppercase font-sans mb-4">
             Our Team
           </p>
           <div className="w-12 h-px bg-gold mb-6 lg:mb-8" />
-          <p className="text-white/60 font-sans font-light leading-relaxed text-sm sm:text-base min-h-[120px] sm:min-h-[100px]">
+          <p className="text-white/60 font-sans font-light leading-relaxed text-sm sm:text-lg min-h-[120px] sm:min-h-[100px]">
             {teamDisplayed}
             <span className={`text-gold animate-pulse ${teamDisplayed.length >= teamText.length ? 'hidden' : ''}`}>|</span>
           </p>

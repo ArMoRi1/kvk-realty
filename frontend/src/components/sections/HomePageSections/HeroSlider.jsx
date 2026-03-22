@@ -114,7 +114,7 @@ function HeroSlider() {
 
       {/* Текст */}
       <div className="absolute bottom-24 sm:bottom-32 left-6 sm:left-16 z-20 max-w-[85vw] sm:max-w-2xl">
-        <p className="text-gold tracking-widest text-xs font-sans uppercase mb-3 sm:mb-4">
+        <p className="text-gold tracking-widest text-md font-sans uppercase mb-3 sm:mb-4">
           KVK Realty Group
         </p>
         <h1 className="text-4xl sm:text-5xl lg:text-7xl font-serif text-white mb-4 sm:mb-6 leading-tight">

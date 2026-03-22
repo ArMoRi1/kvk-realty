@@ -58,7 +58,7 @@ function SellSteps() {
   return (
     <section ref={sectionRef} className="w-full bg-dark-soft py-16 sm:py-24 px-6 sm:px-10 lg:px-16 border-t border-white/10">
       <div className="text-center mb-12 sm:mb-16">
-        <p className="text-gold text-xs tracking-widest uppercase font-sans mb-4">
+        <p className="text-gold text-basetracking-widest uppercase font-sans mb-4">
           The Process
         </p>
         <h2 className="text-3xl sm:text-4xl font-serif text-white">How We Sell Your Home</h2>
@@ -71,7 +71,7 @@ function SellSteps() {
           const isActive = index === activeIndex
           return (
             <div key={step.id} className="flex items-start">
-              <div className="flex flex-col items-center text-center w-28">
+              <div className="flex flex-col items-center text-center w-36">
                 <div className={`w-14 h-14 border flex items-center justify-center mb-4 transition-all duration-500 ${
                   isActive
                     ? 'border-gold bg-gold/15 text-gold scale-110 shadow-[0_0_16px_2px_rgba(201,168,76,0.25)]'
@@ -79,12 +79,12 @@ function SellSteps() {
                 }`}>
                   {step.icon}
                 </div>
-                <p className={`font-sans text-sm font-medium mb-2 leading-tight transition-colors duration-500 ${
+                <p className={`font-sans text-base font-medium mb-2 leading-tight transition-colors duration-500 ${
                   isActive ? 'text-white' : 'text-white/50'
                 }`}>
                   {step.title}
                 </p>
-                <p className={`font-sans text-xs leading-relaxed transition-colors duration-500 ${
+                <p className={`font-sans text-sm leading-relaxed transition-colors duration-500 ${
                   isActive ? 'text-white/60' : 'text-white/30'
                 }`}>
                   {step.desc}
@@ -120,7 +120,7 @@ function SellSteps() {
                   {step.icon}
                 </div>
                 <div className="flex flex-col justify-center w-48">
-                  <p className={`font-sans text-sm font-medium mb-1 leading-tight transition-colors duration-500 ${
+                  <p className={`font-sans text-lg font-medium mb-1 leading-tight transition-colors duration-500 ${
                     isActive ? 'text-white' : 'text-white/50'
                   }`}>
                     {step.title}
