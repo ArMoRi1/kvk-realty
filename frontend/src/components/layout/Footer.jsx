@@ -16,7 +16,7 @@ function Footer() {
       {/* Логотип по центру */}
       <div className="flex justify-center mb-8">
         <Link to="/">
-          <img src={logo} alt="KVK Realty Group Logo" className="h-20 sm:h-36 w-auto" />
+          <img src={logo} alt="KVK Realty Group Logo" className="h-20 sm:h-24 w-auto" />
         </Link>
       </div>
 
