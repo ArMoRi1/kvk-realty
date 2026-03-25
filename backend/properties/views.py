@@ -3,7 +3,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import ContactRequest, TeamMember, BlogPost, Review
+from .models import ContactRequest, TeamMember, BlogPost, Review, Category
+
+@api_view(['GET'])
+def categories_list(request):
+    categories = Category.objects.all()
+    data = [{'slug': c.slug, 'label': c.label, 'color': c.color} for c in categories]
+    return Response(data)
 
 @api_view(['GET'])
 def blog_list(request):
@@ -12,7 +18,9 @@ def blog_list(request):
     for post in posts:
         data.append({
             'id': post.id,
-            'type': post.type,
+            'category_slug': post.category.slug if post.category else None,
+            'category_label': post.category.label if post.category else None,
+            'category_color': post.category.color if post.category else None,
             'date': post.date.strftime('%B %d, %Y'),
             'title': post.title,
             'location': post.location,
@@ -31,7 +39,9 @@ def blog_detail(request, pk):
 
     data = {
         'id': post.id,
-        'type': post.type,
+        'category_slug': post.category.slug if post.category else None,
+        'category_label': post.category.label if post.category else None,
+        'category_color': post.category.color if post.category else None,
         'date': post.date.strftime('%B %d, %Y'),
         'title': post.title,
         'location': post.location,

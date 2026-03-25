@@ -1,13 +1,22 @@
 from django.db import models
+from colorfield.fields import ColorField
+
+class Category(models.Model):
+    slug = models.CharField(max_length=50, unique=True)
+    label = models.CharField(max_length=100)
+    color = ColorField(default='#C9A84C')
+
+    class Meta:
+        verbose_name = 'Category'
+        verbose_name_plural = 'Categories'
+        ordering = ['label']
+
+    def __str__(self):
+        return self.label
 
 class BlogPost(models.Model):
-    TYPE_CHOICES = [
-        ('deal', 'Deal Story'),
-        ('event', 'Event'),
-        ('news', 'Market News'),
-    ]
-
-    type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+    
+    category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField()
     title = models.CharField(max_length=200)
     location = models.CharField(max_length=100, blank=True)

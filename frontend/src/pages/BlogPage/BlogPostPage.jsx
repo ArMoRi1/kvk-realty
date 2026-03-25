@@ -3,18 +3,6 @@ import { useParams, Link } from 'react-router-dom'
 import { getBlogPost } from '../../api/blog'
 import { ArrowLeft } from 'lucide-react'
 
-const tagColors = {
-  "deal": "text-gold border-gold",
-  "event": "text-blue-400 border-blue-400",
-  "news": "text-green-400 border-green-400",
-}
-
-const tagLabels = {
-  "deal": "Deal Story",
-  "event": "Event",
-  "news": "Market News",
-}
-
 function BlogPostPage() {
   const { id } = useParams()
   const [post, setPost] = useState(null)
@@ -35,7 +23,7 @@ function BlogPostPage() {
 
   if (!post) return (
     <div className="w-full min-h-screen bg-dark flex items-center justify-center">
-      <p className="text-white/50 font-sans">Post not found</p>
+      <p className="text-white/50 font-sans text-base">Post not found</p>
     </div>
   )
 
@@ -47,17 +35,22 @@ function BlogPostPage() {
           to="/blog"
           className="flex items-center gap-2 text-white/40 hover:text-gold transition-colors duration-300 text-base tracking-widest uppercase font-sans mb-12"
         >
-          <ArrowLeft size={14} />
+          <ArrowLeft size={16} />
           Back to Blog
         </Link>
 
-        <p className="text-white/30 text-xs tracking-widest uppercase font-sans mb-3">
+        <p className="text-white/30 text-base tracking-widest uppercase font-sans mb-3">
           {post.date} — {post.location}
         </p>
 
-        <span className={`text-xs tracking-widest uppercase font-sans border px-3 py-1 mb-6 inline-block ${tagColors[post.type]}`}>
-          {tagLabels[post.type]}
-        </span>
+        {post.category_label && (
+          <span
+            className="text-base tracking-widest uppercase font-sans border px-3 py-1 mb-6 inline-block"
+            style={{ color: post.category_color, borderColor: post.category_color }}
+          >
+            {post.category_label}
+          </span>
+        )}
 
         <h1 className="text-3xl font-serif text-white mt-6 mb-4 leading-tight">
           {post.title}
@@ -74,12 +67,12 @@ function BlogPostPage() {
         )}
 
         <div className="flex flex-col gap-6">
-        {post.text.split('\n').filter(Boolean).map((paragraph, i) => (
-          <p key={i} className="text-white/60 font-sans font-light leading-relaxed text-lg">
-            {paragraph}
-          </p>
-        ))}
-      </div>
+          {post.text.split('\n').filter(Boolean).map((paragraph, i) => (
+            <p key={i} className="text-white/60 font-sans font-light leading-relaxed text-lg">
+              {paragraph}
+            </p>
+          ))}
+        </div>
 
       </div>
     </div>

@@ -1,10 +1,14 @@
 from django.contrib import admin
-from .models import ContactRequest, TeamMember, BlogPost, Review
+from .models import ContactRequest, TeamMember, BlogPost, Review, Category
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('label', 'slug', 'color')
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'type', 'date', 'location')
-    list_filter = ('type',)
+    list_display = ('title', 'category', 'date', 'location')
+    list_filter = ('category',)
     search_fields = ('title', 'location')
     ordering = ('-date',)
 

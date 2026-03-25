@@ -1,39 +1,25 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { getBlogPosts } from '../../../api/blog'
-
-const tagColors = {
-  "deal": "text-gold border-gold",
-  "event": "text-blue-400 border-blue-400",
-  "news": "text-green-400 border-green-400",
-}
-
-const tagLabels = {
-  "deal": "Deal Story",
-  "event": "Event",
-  "news": "Market News",
-}
-
-const filters = ["all", "deal", "event", "news"]
-
-const filterLabels = {
-  "all": "All",
-  "deal": "Deal Story",
-  "event": "Event",
-  "news": "Market News",
-}
-
+import { getCategories } from '../../../api/categories'
 const PER_PAGE = 3
 
 function BlogHero() {
   const [posts, setPosts] = useState([])
+  const [categories, setCategories] = useState([])
   const [active, setActive] = useState("all")
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    getBlogPosts()
-      .then(res => setPosts(res.data))
+    Promise.all([
+      getBlogPosts(),
+      getCategories(),
+    ])
+      .then(([postsRes, catsRes]) => {
+        setPosts(postsRes.data)
+        setCategories(catsRes.data)
+      })
       .catch(err => console.error(err))
       .finally(() => setLoading(false))
   }, [])
@@ -46,13 +32,13 @@ function BlogHero() {
 
   const filtered = active === "all"
     ? posts
-    : posts.filter(p => p.type === active)
+    : posts.filter(p => p.category_slug === active)
 
   const totalPages = Math.ceil(filtered.length / PER_PAGE)
   const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE)
 
-  const handleFilter = (filter) => {
-    setActive(filter)
+  const handleFilter = (slug) => {
+    setActive(slug)
     setPage(1)
   }
 
@@ -66,19 +52,29 @@ function BlogHero() {
           <div className="w-12 h-px bg-gold mx-auto" />
         </div>
 
-        {/* Фільтри */}
+        {/* Фільтри — динамічно з БД */}
         <div className="flex gap-4 justify-center mb-16 flex-wrap">
-          {filters.map(filter => (
+          <button
+            onClick={() => handleFilter("all")}
+            className={`text-base tracking-widest uppercase font-sans px-6 py-2 border transition-all duration-300 ${
+              active === "all"
+                ? 'border-gold bg-gold text-black'
+                : 'border-white/20 text-white/50 hover:border-gold hover:text-gold'
+            }`}
+          >
+            All
+          </button>
+          {categories.map(cat => (
             <button
-              key={filter}
-              onClick={() => handleFilter(filter)}
+              key={cat.slug}
+              onClick={() => handleFilter(cat.slug)}
               className={`text-base tracking-widest uppercase font-sans px-6 py-2 border transition-all duration-300 ${
-                active === filter
+                active === cat.slug
                   ? 'border-gold bg-gold text-black'
                   : 'border-white/20 text-white/50 hover:border-gold hover:text-gold'
               }`}
             >
-              {filterLabels[filter]}
+              {cat.label}
             </button>
           ))}
         </div>
@@ -100,9 +96,14 @@ function BlogHero() {
                   <p className="text-white/30 text-base tracking-widest uppercase font-sans mb-3">
                     {post.date} — {post.location}
                   </p>
-                  <span className={`text-base tracking-widest uppercase font-sans border px-3 py-1 mb-4 inline-block ${tagColors[post.type]}`}>
-                    {tagLabels[post.type]}
-                  </span>
+                  {post.category_label && (
+                    <span
+                      className="text-base tracking-widest uppercase font-sans border px-3 py-1 mb-4 inline-block"
+                      style={{ color: post.category_color, borderColor: post.category_color }}
+                    >
+                      {post.category_label}
+                    </span>
+                  )}
                   {post.image && (
                     <img
                       src={post.image}
