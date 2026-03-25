@@ -8,7 +8,9 @@ import AgentsPage from './pages/AgentsPage/AgentsPage'
 import BlogPage from './pages/BlogPage/BlogPage'
 import BlogPostPage from './pages/BlogPage/BlogPostPage'
 import ReviewsPage from './pages/ReviewsPage/ReviewsPage'
-
+import NotFoundPage from './pages/TechnicalPages/NotFoundPage'
+import UnderConstructionPage from './pages/TechnicalPages/UnderConstructionPage'
+import ServerErrorPage from './pages/TechnicalPages/ServerErrorPage'
 function App() {
 
 useEffect(() => {
@@ -34,6 +36,9 @@ useEffect(() => {
         </Route>
 
         <Route path="/agents" element={<AgentsPage />} />
+        <Route path="properties" element={<UnderConstructionPage />} />
+        <Route path="500" element={<ServerErrorPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   )
