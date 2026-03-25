@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { NavLink, Link } from 'react-router-dom'
+import logo from '../../assets/img/logo.png'
 
 const navLinks = [
   { label: 'HOME', path: '/' },
@@ -20,7 +21,7 @@ function Navbar() {
   return (
     <>
       {/* ===== NAVBAR ===== */}
-      <nav className="fixed top-2 left-0 w-full z-[110] px-10 py-6 flex items-center justify-between">
+      <nav className="fixed top-2 left-0 w-full z-[110] px-10 py-12 flex items-center justify-between">
 
       {/* Ліве меню — desktop / порожній placeholder — mobile */}
       <div className="w-16 lg:w-auto">
@@ -32,10 +33,8 @@ function Navbar() {
       </div>
 
         {/* Логотип */}
-        <Link to="/" className="absolute left-1/2 -translate-x-1/2 text-center text-white">
-          <p className="text-[10px] xs:text-sm tracking-widest text-gold leading-none">THE</p>
-          <p className="text-base xs:text-xl font-serif tracking-widest font-semibold leading-tight">KVK REALTY GROUP</p>
-          <p className="text-[10px] xs:text-sm tracking-widest text-gold mt-0.5">EST. 2017</p>
+        <Link to="/" className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 text-center text-white">
+          <img src={logo} alt="KVK Realty Group Logo" className="h-20 sm:h-36 w-auto" />
         </Link>
 
         {/* Праве меню — тільки desktop */}
