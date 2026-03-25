@@ -53,7 +53,7 @@ function AgentsHero() {
 
   if (loading) return (
     <div className="w-full min-h-screen bg-dark flex items-center justify-center">
-      <p className="text-gold text-xs tracking-widest uppercase font-sans">Loading...</p>
+      <p className="text-gold text-sm tracking-widest uppercase font-sans">Loading...</p>
     </div>
   )
 
@@ -156,15 +156,14 @@ function AgentsHero() {
 
       {/* ================================================================
           ДЕСКТОПНА СТРУКТУРА (≥ 1024px)
-          [25% список] | [75% контент: фото+текст зверху, деталі знизу]
       ================================================================ */}
-      {/* <div className="hidden lg:flex h-[calc(100vh-96px)] pt-24"> */}
-          <div className="hidden lg:flex h-[calc(100vh-40px)] pt-24">
+      <div className="hidden lg:flex min-h-[calc(100vh-40px)] pt-24">
+
         {/* ===== ЛІВА КОЛОНКА — міні-галерея 2 в ряд ===== */}
         <div className="w-1/4 border-r border-white/10 overflow-y-auto flex-shrink-0 self-stretch">
           <div className="p-4">
-            <p className="text-gold text-xs tracking-widest uppercase font-sans mb-1">KVK Realty Group</p>
-            <h1 className="text-xl font-serif text-white mb-4">Our Agents</h1>
+            <p className="text-gold text-sm tracking-widest uppercase font-sans mb-1">KVK Realty Group</p>
+            <h1 className="text-2xl font-serif text-white mb-4">Our Agents</h1>
             <div className="grid grid-cols-2 gap-2">
               {agents.map(agent => (
                 <button
@@ -180,10 +179,6 @@ function AgentsHero() {
                     containerClassName="w-full aspect-square"
                     className="w-full h-full object-cover object-top transition-all duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 flex flex-col justify-end p-1.5 bg-gradient-to-t from-black/80 via-black/20 to-transparent">
-                    <p className="text-white font-serif leading-tight" style={{ fontSize: '9px' }}>{agent.name}</p>
-                    <p className="text-gold tracking-widest uppercase" style={{ fontSize: '8px' }}>{agent.role}</p>
-                  </div>
                 </button>
               ))}
             </div>
@@ -208,31 +203,31 @@ function AgentsHero() {
 
             {/* Основна інфо */}
             <div className="flex-1 px-10 py-10 flex flex-col justify-center">
-              <p className="text-gold text-xs tracking-widest uppercase font-sans mb-2">{selected.role}</p>
+              <p className="text-gold text-sm tracking-widest uppercase font-sans mb-3">{selected.role}</p>
               <h2 className="text-4xl font-serif text-white mb-4 leading-tight">{selected.name}</h2>
               <div className="w-8 h-px bg-gold mb-6" />
 
               <div className="flex flex-col gap-4 mb-8">
                 <div>
-                  <p className="text-gold text-xs tracking-widest uppercase font-sans mb-1">Phone</p>
-                  <p className="text-white font-sans font-light">{selected.phone}</p>
+                  <p className="text-gold text-sm tracking-widest uppercase font-sans mb-1">Phone</p>
+                  <p className="text-white font-sans font-light text-base">{selected.phone}</p>
                 </div>
                 <div>
-                  <p className="text-gold text-xs tracking-widest uppercase font-sans mb-1">Email</p>
-                  <p className="text-white font-sans font-light">{selected.email}</p>
+                  <p className="text-gold text-sm tracking-widest uppercase font-sans mb-1">Email</p>
+                  <p className="text-white font-sans font-light text-base">{selected.email}</p>
                 </div>
               </div>
 
               <div className="flex gap-3">
                 <button
                   onClick={() => setModalOpen(true)}
-                  className="border border-gold text-gold px-6 py-3 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300"
+                  className="border border-gold text-gold px-6 py-3 text-sm tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300"
                 >
                   Contact Agent
                 </button>
                 <button
                   onClick={() => setReviewModalOpen(true)}
-                  className="border border-white/20 text-white/50 px-6 py-3 text-xs tracking-widest font-sans uppercase hover:border-gold hover:text-gold transition-all duration-300"
+                  className="border border-white/20 text-white/50 px-6 py-3 text-sm tracking-widest font-sans uppercase hover:border-gold hover:text-gold transition-all duration-300"
                 >
                   Leave a Review
                 </button>
@@ -240,23 +235,23 @@ function AgentsHero() {
             </div>
           </div>
 
-          {/* ── Нижній блок: stats + motto + bio + reviews на всю ширину ── */}
+          {/* ── Нижній блок: stats + motto + bio + reviews ── */}
           <div className="px-10 py-10">
 
             {/* Stats */}
             <div className="flex gap-12 mb-10 flex-wrap">
               <div>
                 <p className="text-4xl font-serif text-white"><CountUp value={selected.deals} /></p>
-                <p className="text-white/40 text-xs tracking-widest uppercase font-sans mt-1">Deals Closed</p>
+                <p className="text-white/40 text-sm tracking-widest uppercase font-sans mt-2">Deals Closed</p>
               </div>
               <div>
                 <p className="text-4xl font-serif text-white"><CountUp value={selected.experience} /></p>
-                <p className="text-white/40 text-xs tracking-widest uppercase font-sans mt-1">Years Experience</p>
+                <p className="text-white/40 text-sm tracking-widest uppercase font-sans mt-2">Years Experience</p>
               </div>
               {selected.total_volume > 0 && (
                 <div>
                   <p className="text-4xl font-serif text-white">${(selected.total_volume / 1_000_000).toFixed(1)}M</p>
-                  <p className="text-white/40 text-xs tracking-widest uppercase font-sans mt-1">Total Volume</p>
+                  <p className="text-white/40 text-sm tracking-widest uppercase font-sans mt-2">Total Volume</p>
                 </div>
               )}
             </div>
@@ -264,15 +259,15 @@ function AgentsHero() {
             {/* Motto */}
             {selected.motto && (
               <div className="mb-8 border-l-2 border-gold pl-4">
-                <p className="text-white/50 font-sans font-light italic text-sm leading-relaxed">"{selected.motto}"</p>
+                <p className="text-white/50 font-sans font-light italic text-base leading-relaxed">"{selected.motto}"</p>
               </div>
             )}
 
             {/* Bio */}
             {selected.bio && (
               <div className="mb-10">
-                <p className="text-gold text-xs tracking-widest uppercase font-sans mb-2">About</p>
-                <p className="text-white/50 font-sans font-light text-sm leading-relaxed">{selected.bio}</p>
+                <p className="text-gold text-sm tracking-widest uppercase font-sans mb-3">About</p>
+                <p className="text-white/50 font-sans font-light text-base leading-relaxed">{selected.bio}</p>
               </div>
             )}
 

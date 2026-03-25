@@ -20,7 +20,7 @@ function BuyFilters({
   activeFiltersCount,
 }) {
   return (
-    <div className="w-full bg-dark-soft border-b border-white/10 px-4 sm:px-8 py-3 flex-shrink-0">
+    <div className="w-full bg-dark-soft border-b border-white/10 px-4 sm:px-8 py-3 mt-6 flex-shrink-0">
       <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
 
         {/* Пошук */}

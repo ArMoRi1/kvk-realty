@@ -29,7 +29,7 @@ function BlogPostPage() {
 
   if (loading) return (
     <div className="w-full min-h-screen bg-dark flex items-center justify-center">
-      <p className="text-gold text-xs tracking-widest uppercase font-sans">Loading...</p>
+      <p className="text-gold text-base tracking-widest uppercase font-sans">Loading...</p>
     </div>
   )
 
@@ -45,7 +45,7 @@ function BlogPostPage() {
 
         <Link
           to="/blog"
-          className="flex items-center gap-2 text-white/40 hover:text-gold transition-colors duration-300 text-xs tracking-widest uppercase font-sans mb-12"
+          className="flex items-center gap-2 text-white/40 hover:text-gold transition-colors duration-300 text-base tracking-widest uppercase font-sans mb-12"
         >
           <ArrowLeft size={14} />
           Back to Blog
@@ -59,7 +59,7 @@ function BlogPostPage() {
           {tagLabels[post.type]}
         </span>
 
-        <h1 className="text-5xl font-serif text-white mt-6 mb-4 leading-tight">
+        <h1 className="text-3xl font-serif text-white mt-6 mb-4 leading-tight">
           {post.title}
         </h1>
 

@@ -40,7 +40,7 @@ function GetInTouch() {
 
           {/* Ліва частина */}
           <div className="flex flex-col justify-center">
-            <p className="text-gold text-xs tracking-widest uppercase font-sans mb-4">
+            <p className="text-gold text-base tracking-widest uppercase font-sans mb-4">
               Contact Us
             </p>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-white mb-6 lg:mb-8 leading-tight">

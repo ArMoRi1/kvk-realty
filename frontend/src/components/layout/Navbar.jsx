@@ -21,11 +21,11 @@ function Navbar() {
   return (
     <>
       {/* ===== NAVBAR ===== */}
-      <nav className="fixed top-2 left-0 w-full z-[110] px-10 py-12 flex items-center justify-between">
+      <nav className="fixed top-2 left-0 w-full z-[110] px-10 py-6 flex items-center justify-between">
 
       {/* Ліве меню — desktop / порожній placeholder — mobile */}
       <div className="w-16 lg:w-auto">
-        <ul className="hidden lg:flex gap-10 tracking-widest text-xs font-sans font-medium text-white">
+        <ul className="hidden lg:flex gap-10 tracking-widest text-base font-sans font-medium text-white">
           <li><NavLink to="/" className={linkClass}>HOME</NavLink></li>
           <li><NavLink to="/buy" className={linkClass}>BUY</NavLink></li>
           <li><NavLink to="/sell" className={linkClass}>SELL</NavLink></li>
@@ -34,11 +34,11 @@ function Navbar() {
 
         {/* Логотип */}
         <Link to="/" className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 text-center text-white">
-          <img src={logo} alt="KVK Realty Group Logo" className="h-20 sm:h-36 w-auto" />
+          <img src={logo} alt="KVK Realty Group Logo" className="h-20 sm:h-24 w-auto" />
         </Link>
 
         {/* Праве меню — тільки desktop */}
-        <ul className="hidden lg:flex gap-10 tracking-widest text-xs font-sans font-medium text-white">
+        <ul className="hidden lg:flex gap-10 tracking-widest text-base font-sans font-medium text-white">
           <li><NavLink to="/agents" className={linkClass}>AGENTS</NavLink></li>
           <li><NavLink to="/blog" className={linkClass}>BLOG</NavLink></li>
           <li>

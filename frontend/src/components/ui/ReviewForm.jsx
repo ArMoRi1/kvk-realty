@@ -4,7 +4,7 @@ import axiosInstance from '../../api/axiosInstance'
 import { getAgents } from '../../api/agents'
 
 const inputClass =
-  'w-full bg-transparent border-b border-white/20 text-white placeholder-white/30 py-3 text-sm font-sans tracking-wide focus:outline-none focus:border-gold transition-colors duration-300'
+  'w-full bg-transparent border-b border-white/20 text-white placeholder-white/30 py-3 text-base font-sans tracking-wide focus:outline-none focus:border-gold transition-colors duration-300'
 
 function StarPicker({ value, onChange }) {
   const [hovered, setHovered] = useState(0)
@@ -33,7 +33,6 @@ function StarPicker({ value, onChange }) {
   )
 }
 
-// mode: 'inline' | 'modal'
 function ReviewForm({ mode = 'inline', onClose, preselectedAgentId = null }) {
   const [agents, setAgents] = useState([])
   const [formData, setFormData] = useState({
@@ -51,7 +50,6 @@ function ReviewForm({ mode = 'inline', onClose, preselectedAgentId = null }) {
       .catch(err => console.error(err))
   }, [])
 
-  // якщо preselectedAgentId змінився (при перемиканні агента)
   useEffect(() => {
     if (preselectedAgentId) {
       setFormData(prev => ({ ...prev, agent_id: preselectedAgentId }))
@@ -82,15 +80,14 @@ function ReviewForm({ mode = 'inline', onClose, preselectedAgentId = null }) {
   const content = submitted ? (
     <div className="text-center py-8">
       <div className="w-12 h-px bg-gold mx-auto mb-6" />
-      <p className="text-gold text-xs tracking-widest uppercase font-sans mb-3">Thank You!</p>
+      <p className="text-gold text-sm tracking-widest uppercase font-sans mb-3">Thank You!</p>
       <p className="text-white font-serif text-2xl mb-2">Your review has been submitted.</p>
-      <p className="text-white/40 font-sans text-sm">It will appear after moderation.</p>
+      <p className="text-white/40 font-sans text-base">It will appear after moderation.</p>
       <div className="w-12 h-px bg-gold mx-auto mt-6" />
     </div>
   ) : (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
 
-      {/* Ім'я */}
       <input
         type="text"
         name="author"
@@ -101,14 +98,13 @@ function ReviewForm({ mode = 'inline', onClose, preselectedAgentId = null }) {
         className={inputClass}
       />
 
-      {/* Вибір агента */}
       <div>
-        <p className="text-gold text-xs tracking-widest uppercase font-sans mb-2">Agent (optional)</p>
+        <p className="text-gold text-sm tracking-widest uppercase font-sans mb-2">Agent (optional)</p>
         <select
           name="agent_id"
           value={formData.agent_id}
           onChange={handleChange}
-          className="w-full bg-dark-soft border border-white/20 text-white/70 py-2.5 px-3 text-xs font-sans tracking-wide focus:outline-none focus:border-gold transition-colors duration-300"
+          className="w-full bg-dark-soft border border-white/20 text-white/70 py-2.5 px-3 text-base font-sans tracking-wide focus:outline-none focus:border-gold transition-colors duration-300"
         >
           <option value="">— General Review —</option>
           {agents.map(agent => (
@@ -119,16 +115,14 @@ function ReviewForm({ mode = 'inline', onClose, preselectedAgentId = null }) {
         </select>
       </div>
 
-      {/* Рейтинг */}
       <div>
-        <p className="text-gold text-xs tracking-widest uppercase font-sans mb-3">Rating</p>
+        <p className="text-gold text-sm tracking-widest uppercase font-sans mb-3">Rating</p>
         <StarPicker
           value={formData.rating}
           onChange={val => setFormData(prev => ({ ...prev, rating: val }))}
         />
       </div>
 
-      {/* Текст */}
       <textarea
         name="text"
         placeholder="YOUR REVIEW"
@@ -142,7 +136,7 @@ function ReviewForm({ mode = 'inline', onClose, preselectedAgentId = null }) {
       <button
         type="submit"
         disabled={loading}
-        className="border border-gold text-gold px-8 py-4 text-xs tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="border border-gold text-gold px-8 py-4 text-sm tracking-widest font-sans uppercase hover:bg-gold hover:text-black transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {loading ? 'Sending...' : 'Submit Review'}
       </button>
@@ -150,11 +144,10 @@ function ReviewForm({ mode = 'inline', onClose, preselectedAgentId = null }) {
     </form>
   )
 
-  // ── Inline режим (на сторінці /reviews) ──
   if (mode === 'inline') {
     return (
       <div className="border border-white/10 p-8 sm:p-10">
-        <p className="text-gold text-xs tracking-widest uppercase font-sans mb-2">Share Your Experience</p>
+        <p className="text-gold text-sm tracking-widest uppercase font-sans mb-2">Share Your Experience</p>
         <h3 className="text-2xl font-serif text-white mb-2">Leave a Review</h3>
         <div className="w-8 h-px bg-gold mb-8" />
         {content}
@@ -162,10 +155,9 @@ function ReviewForm({ mode = 'inline', onClose, preselectedAgentId = null }) {
     )
   }
 
-  // ── Modal режим (на AgentsPage) ──
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4"
+      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 px-4"
       onClick={onClose}
     >
       <div
@@ -178,7 +170,7 @@ function ReviewForm({ mode = 'inline', onClose, preselectedAgentId = null }) {
         >
           <X size={20} />
         </button>
-        <p className="text-gold text-xs tracking-widest uppercase font-sans mb-2">Share Your Experience</p>
+        <p className="text-gold text-sm tracking-widest uppercase font-sans mb-2">Share Your Experience</p>
         <h3 className="text-2xl font-serif text-white mb-2">Leave a Review</h3>
         <div className="w-8 h-px bg-gold mb-8" />
         {content}

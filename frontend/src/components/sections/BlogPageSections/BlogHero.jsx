@@ -40,7 +40,7 @@ function BlogHero() {
 
   if (loading) return (
     <div className="w-full min-h-screen bg-dark flex items-center justify-center">
-      <p className="text-gold text-xs tracking-widest uppercase font-sans">Loading...</p>
+      <p className="text-gold text-base tracking-widest uppercase font-sans">Loading...</p>
     </div>
   )
 
@@ -72,7 +72,7 @@ function BlogHero() {
             <button
               key={filter}
               onClick={() => handleFilter(filter)}
-              className={`text-xs tracking-widest uppercase font-sans px-6 py-2 border transition-all duration-300 ${
+              className={`text-base tracking-widest uppercase font-sans px-6 py-2 border transition-all duration-300 ${
                 active === filter
                   ? 'border-gold bg-gold text-black'
                   : 'border-white/20 text-white/50 hover:border-gold hover:text-gold'
@@ -82,53 +82,53 @@ function BlogHero() {
             </button>
           ))}
         </div>
-{paginated.length === 0 ? (
-  <div className="flex flex-col items-center py-24 gap-4">
-    <div className="w-8 h-px bg-gold/40" />
-    <p className="text-white/30 text-xs tracking-widest uppercase font-sans">No posts found</p>
-    <div className="w-8 h-px bg-gold/40" />
-  </div>
-) :(
-        <div className="relative">
-          <div className="absolute left-0 top-0 bottom-0 w-px bg-white/10" />
 
-          <div className="flex flex-col gap-16">
-            {paginated.map((post, index) => (
-              <div key={post.id} className="relative pl-12">
-                <div className="absolute left-0 top-2 -translate-x-1/2 w-3 h-3 bg-gold rotate-45" />
-                <p className="text-white/30 text-xs tracking-widest uppercase font-sans mb-3">
-                  {post.date} — {post.location}
-                </p>
-                <span className={`text-xs tracking-widest uppercase font-sans border px-3 py-1 mb-4 inline-block ${tagColors[post.type]}`}>
-                  {tagLabels[post.type]}
-                </span>
-                {post.image && (
-                  <img
-                    src={post.image}
-                    alt={post.title}
-                    className="w-full h-64 object-cover mt-4 mb-6"
-                  />
-                )}
-                <Link to={`/blog/${post.id}`}>
-                  <h2 className="text-2xl font-serif text-white mb-4 hover:text-gold transition-colors duration-300">
-                    {post.title}
-                  </h2>
-                </Link>
-                <p className="text-white/50 font-sans font-light leading-relaxed line-clamp-3">
-                  {post.text}
-                </p>
-                <Link to={`/blog/${post.id}`} className="text-gold text-xs tracking-widest uppercase font-sans mt-3 inline-block hover:text-gold-light transition-colors duration-300">
-                  Read More →
-                </Link>
-                {index < paginated.length - 1 && (
-                  <div className="w-full h-px bg-white/5 mt-16" />
-                )}
-              </div>
-            ))}
+        {paginated.length === 0 ? (
+          <div className="flex flex-col items-center py-24 gap-4">
+            <div className="w-8 h-px bg-gold/40" />
+            <p className="text-white/30 text-base tracking-widest uppercase font-sans">No posts found</p>
+            <div className="w-8 h-px bg-gold/40" />
           </div>
-        </div>
-)}
-        
+        ) : (
+          <div className="relative">
+            <div className="absolute left-0 top-0 bottom-0 w-px bg-white/10" />
+
+            <div className="flex flex-col gap-16">
+              {paginated.map((post, index) => (
+                <div key={post.id} className="relative pl-12">
+                  <div className="absolute left-0 top-2 -translate-x-1/2 w-3 h-3 bg-gold rotate-45" />
+                  <p className="text-white/30 text-base tracking-widest uppercase font-sans mb-3">
+                    {post.date} — {post.location}
+                  </p>
+                  <span className={`text-base tracking-widest uppercase font-sans border px-3 py-1 mb-4 inline-block ${tagColors[post.type]}`}>
+                    {tagLabels[post.type]}
+                  </span>
+                  {post.image && (
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      className="w-full h-64 object-cover mt-4 mb-6"
+                    />
+                  )}
+                  <Link to={`/blog/${post.id}`}>
+                    <h2 className="text-2xl font-serif text-white mb-4 hover:text-gold transition-colors duration-300">
+                      {post.title}
+                    </h2>
+                  </Link>
+                  <p className="text-white/50 font-sans font-light leading-relaxed line-clamp-3 text-base">
+                    {post.text}
+                  </p>
+                  <Link to={`/blog/${post.id}`} className="text-gold text-base tracking-widest uppercase font-sans mt-3 inline-block hover:text-gold-light transition-colors duration-300">
+                    Read More →
+                  </Link>
+                  {index < paginated.length - 1 && (
+                    <div className="w-full h-px bg-white/5 mt-16" />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Пагінація */}
         {totalPages > 1 && (
@@ -145,7 +145,7 @@ function BlogHero() {
               <button
                 key={p}
                 onClick={() => setPage(p)}
-                className={`w-8 h-8 text-xs font-sans tracking-widest transition-all duration-300 ${
+                className={`w-8 h-8 text-base font-sans tracking-widest transition-all duration-300 ${
                   p === page
                     ? 'bg-gold text-black'
                     : 'text-white/40 hover:text-gold border border-white/10 hover:border-gold'

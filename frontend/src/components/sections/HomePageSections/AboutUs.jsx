@@ -83,7 +83,7 @@ function AboutUs() {
         <div className={`flex flex-col justify-center px-6 sm:px-10 lg:px-16 py-12 lg:py-24 order-last lg:order-first transition-all duration-1000 ${
           bossVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'
         }`}>
-          <p className="text-gold text-sm tracking-widest uppercase font-sans mb-4">
+          <p className="text-gold text-base tracking-widest uppercase font-sans mb-4">
             Founder & CEO
           </p>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-white mb-6 lg:mb-8 leading-tight">

@@ -28,7 +28,7 @@ const slides = [
     title: 'Where Families Belong',
     subtitle: 'Discover the best suburbs of Detroit',
   },
-  { id: 3, video: video3, poster: poster3, title: 'Your New Beginning', subtitle: 'We help you find the perfect place to call home' },
+  { id: 3, video: video3, poster: poster3, title: 'Your New Beginning Start Here', subtitle: 'We help you find the perfect place to call home' },
   { id: 4, video: video4, poster: poster4, title: 'Luxury Without Compromise', subtitle: 'Exceptional homes for exceptional families' },
   { id: 5, video: video5, poster: poster5, title: 'Trusted. Local. Dedicated.', subtitle: 'Your Metro Detroit real estate experts since 2017' },]
 
