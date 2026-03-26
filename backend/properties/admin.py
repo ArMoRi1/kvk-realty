@@ -1,5 +1,10 @@
 from django.contrib import admin
-from .models import ContactRequest, TeamMember, BlogPost, Review, Category
+from .models import ContactRequest, TeamMember, BlogPost, Review, Category, Role
+
+@admin.register(Role)
+class RoleAdmin(admin.ModelAdmin):
+    list_display = ('label', 'slug', 'is_agent')
+    list_editable = ('is_agent',)
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -23,12 +28,11 @@ class ContactRequestAdmin(admin.ModelAdmin):
 
 @admin.register(TeamMember)
 class TeamMemberAdmin(admin.ModelAdmin):
-    list_display = ('order', 'name', 'role', 'is_agent', 'phone', 'email', 'deals', 'experience')
-    list_display_links = ('name',)
-    list_filter = ('is_agent',)
-    list_editable = ('order', 'is_agent')
-    search_fields = ('name', 'role', 'email')
-    ordering = ('order', 'name')
+    list_display = ('name', 'phone', 'email', 'deals', 'experience')
+    list_filter = ('roles',)
+    search_fields = ('name', 'email')
+    ordering = ('name',)
+    filter_horizontal = ('roles',)
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
@@ -40,6 +44,6 @@ class ReviewAdmin(admin.ModelAdmin):
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'agent':
-            kwargs['queryset'] = TeamMember.objects.filter(is_agent=True)
+            kwargs['queryset'] = TeamMember.objects.filter(roles__is_agent=True).distinct()
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
     

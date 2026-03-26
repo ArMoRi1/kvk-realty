@@ -1,6 +1,19 @@
 from django.db import models
 from colorfield.fields import ColorField
 
+class Role(models.Model):
+    slug = models.CharField(max_length=50, unique=True)
+    label = models.CharField(max_length=100)
+    is_agent = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['label']
+        verbose_name = 'Role'
+        verbose_name_plural = 'Roles'
+
+    def __str__(self):
+        return self.label
+
 class Category(models.Model):
     slug = models.CharField(max_length=50, unique=True)
     label = models.CharField(max_length=100)
@@ -35,7 +48,6 @@ class BlogPost(models.Model):
 
 class TeamMember(models.Model):
     name = models.CharField(max_length=100)
-    role = models.CharField(max_length=100)
     photo = models.ImageField(upload_to='team/', blank=True)
     phone = models.CharField(max_length=20, blank=True)
     email = models.EmailField(blank=True)
@@ -44,16 +56,15 @@ class TeamMember(models.Model):
     total_volume = models.BigIntegerField(default=0)
     bio = models.TextField(blank=True)                
     motto = models.CharField(max_length=255, blank=True)  
-    is_agent = models.BooleanField(default=False)
-    order = models.IntegerField(default=0)
+    roles = models.ManyToManyField(Role, blank=True)
 
     class Meta:
-        ordering = ['order', 'name']
+        ordering = ['name']
         verbose_name = 'Team Member'
         verbose_name_plural = 'Team Members'
 
     def __str__(self):
-        return f"{self.name} — {self.role}"
+        return self.name
 
 
 class ContactRequest(models.Model):

@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import ContactRequest, TeamMember, BlogPost, Review, Category
+from .models import ContactRequest, TeamMember, BlogPost, Review, Category, Role
 
 @api_view(['GET'])
 def categories_list(request):
@@ -53,14 +53,13 @@ def blog_detail(request, pk):
 
 @api_view(['GET'])
 def team_list(request):
-    """Всі члени команди — для TeamSlider на HomePage"""
     members = TeamMember.objects.all()
     data = []
     for member in members:
         data.append({
             'id': member.id,
             'name': member.name,
-            'role': member.role,
+            'roles': [{'slug': r.slug, 'label': r.label} for r in member.roles.all()],
             'photo': request.build_absolute_uri(member.photo.url) if member.photo else None,
             'phone': member.phone,
             'email': member.email,
@@ -69,21 +68,19 @@ def team_list(request):
             'bio': member.bio,
             'motto': member.motto,
             'experience': member.experience,
-            'is_agent': member.is_agent,
         })
     return Response(data)
 
 
 @api_view(['GET'])
 def agents_list(request):
-    """Тільки агенти (is_agent=True) — для AgentsHero"""
-    agents = TeamMember.objects.filter(is_agent=True)
+    agents = TeamMember.objects.filter(roles__is_agent=True).distinct()
     data = []
     for agent in agents:
         data.append({
             'id': agent.id,
             'name': agent.name,
-            'role': agent.role,
+            'roles': [{'slug': r.slug, 'label': r.label} for r in agent.roles.all()],
             'photo': request.build_absolute_uri(agent.photo.url) if agent.photo else None,
             'phone': agent.phone,
             'email': agent.email,
@@ -154,6 +151,7 @@ Message: {message or '—'}
 
     return Response({'success': True}, status=status.HTTP_201_CREATED)
 
+
 @api_view(['GET'])
 def reviews_list(request):
     agent_id = request.GET.get('agent')
@@ -181,6 +179,7 @@ def reviews_list(request):
 
     return Response({'results': data, 'total': total, 'page': page, 'per_page': per_page})
 
+
 @api_view(['POST'])
 def review_create(request):
     data = request.data
@@ -198,7 +197,7 @@ def review_create(request):
     agent = None
     if agent_id:
         try:
-            agent = TeamMember.objects.get(pk=agent_id, is_agent=True)
+            agent = TeamMember.objects.get(pk=agent_id, roles__is_agent=True)
         except TeamMember.DoesNotExist:
             pass
 

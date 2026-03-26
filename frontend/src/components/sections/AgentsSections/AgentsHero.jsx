@@ -31,6 +31,11 @@ function CountUp({ value, className }) {
   return <span ref={ref} className={className}>{count}</span>
 }
 
+function formatRoles(roles) {
+  if (!roles || roles.length === 0) return ''
+  return roles.map(r => r.label).join(' | ')
+}
+
 function AgentsHero() {
   const [agents, setAgents] = useState([])
   const [selected, setSelected] = useState(null)
@@ -62,9 +67,7 @@ function AgentsHero() {
   return (
     <div className="w-full min-h-screen bg-dark">
 
-      {/* ================================================================
-          МОБІЛЬНА СТРУКТУРА (< 1024px)
-      ================================================================ */}
+      {/* МОБІЛЬНА СТРУКТУРА */}
       <div className="lg:hidden flex h-screen pt-24">
         <div className="w-1/3 border-r border-white/10 overflow-y-auto flex flex-col">
           <div className="p-3 flex flex-col gap-2">
@@ -84,7 +87,7 @@ function AgentsHero() {
                 />
                 <div className="absolute inset-0 flex flex-col justify-end p-1 bg-gradient-to-t from-black/80 via-black/20 to-transparent">
                   <p className="text-white font-serif leading-tight" style={{ fontSize: '8px' }}>{agent.name}</p>
-                  <p className="text-gold tracking-widest uppercase" style={{ fontSize: '7px' }}>{agent.role}</p>
+                  <p className="text-gold tracking-widest uppercase" style={{ fontSize: '7px' }}>{formatRoles(agent.roles)}</p>
                 </div>
               </button>
             ))}
@@ -103,7 +106,7 @@ function AgentsHero() {
           </div>
           <div className="border-t border-white/10" />
           <div className="h-1/2 overflow-y-auto px-4 py-4 flex flex-col justify-start">
-            <p className="text-gold text-xs tracking-widest uppercase font-sans mb-1">{selected.role}</p>
+            <p className="text-gold text-xs tracking-widest uppercase font-sans mb-1">{formatRoles(selected.roles)}</p>
             <h2 className="text-lg font-serif text-white mb-2 leading-tight">{selected.name}</h2>
             <div className="w-6 h-px bg-gold mb-3" />
             <div className="flex gap-5 mb-3">
@@ -154,13 +157,11 @@ function AgentsHero() {
         </div>
       </div>
 
-      {/* ================================================================
-          ДЕСКТОПНА СТРУКТУРА (≥ 1024px)
-      ================================================================ */}
-      <div className="hidden lg:flex min-h-[calc(100vh-40px)] pt-24">
+      {/* ДЕСКТОПНА СТРУКТУРА */}
+      <div className="hidden lg:flex h-[calc(100vh-40px)] pt-24">
 
-        {/* ===== ЛІВА КОЛОНКА — міні-галерея 2 в ряд ===== */}
-        <div className="w-1/4 border-r border-white/10 overflow-y-auto flex-shrink-0 self-stretch">
+        {/* ЛІВА КОЛОНКА */}
+        <div className="w-1/4 border-r border-white/10 flex-shrink-0 overflow-y-auto">
           <div className="p-4">
             <p className="text-gold text-sm tracking-widest uppercase font-sans mb-1">KVK Realty Group</p>
             <h1 className="text-2xl font-serif text-white mb-4">Our Agents</h1>
@@ -185,13 +186,10 @@ function AgentsHero() {
           </div>
         </div>
 
-        {/* ===== ПРАВА ЧАСТИНА — скролиться ===== */}
+        {/* ПРАВА ЧАСТИНА */}
         <div className="flex-1 overflow-y-auto">
 
-          {/* ── Верхній блок: фото + основна інфо ── */}
           <div className="flex border-b border-white/10">
-
-            {/* Фото */}
             <div className="w-1/3 flex-shrink-0 relative" style={{ minHeight: '400px' }}>
               <FadeImage
                 src={selected.photo}
@@ -201,9 +199,8 @@ function AgentsHero() {
               />
             </div>
 
-            {/* Основна інфо */}
             <div className="flex-1 px-10 py-10 flex flex-col justify-center">
-              <p className="text-gold text-sm tracking-widest uppercase font-sans mb-3">{selected.role}</p>
+              <p className="text-gold text-sm tracking-widest uppercase font-sans mb-3">{formatRoles(selected.roles)}</p>
               <h2 className="text-4xl font-serif text-white mb-4 leading-tight">{selected.name}</h2>
               <div className="w-8 h-px bg-gold mb-6" />
 
@@ -235,10 +232,7 @@ function AgentsHero() {
             </div>
           </div>
 
-          {/* ── Нижній блок: stats + motto + bio + reviews ── */}
           <div className="px-10 py-10">
-
-            {/* Stats */}
             <div className="flex gap-12 mb-10 flex-wrap">
               <div>
                 <p className="text-4xl font-serif text-white"><CountUp value={selected.deals} /></p>
@@ -256,14 +250,12 @@ function AgentsHero() {
               )}
             </div>
 
-            {/* Motto */}
             {selected.motto && (
               <div className="mb-8 border-l-2 border-gold pl-4">
                 <p className="text-white/50 font-sans font-light italic text-base leading-relaxed">"{selected.motto}"</p>
               </div>
             )}
 
-            {/* Bio */}
             {selected.bio && (
               <div className="mb-10">
                 <p className="text-gold text-sm tracking-widest uppercase font-sans mb-3">About</p>
