@@ -1,4 +1,5 @@
 import requests
+import concurrent.futures
 from django.conf import settings
 from django.core.cache import cache
 
@@ -8,6 +9,7 @@ FIELDS = ','.join([
     'ListingKeyNumeric',
     'ListPrice',
     'StandardStatus',
+    'PropertyType',
     'PropertySubType',
     'UnparsedAddress',
     'OriginalPostalCity',
@@ -49,15 +51,14 @@ def get_token():
     cache.set(TOKEN_CACHE_KEY, token, timeout=60 * 60 * 23)
     return token
 
-def build_filter(filters):
-    status = filters.get('status', 'all')
+def build_filter(filters, status_override=None):
+    conditions = []
 
-    if status == 'for rent':
-        conditions = ["StandardStatus eq 'Active Rental'"]
-    elif status == 'for sale':
-        conditions = ["StandardStatus eq 'Active'"]
-    else:  # all
-        conditions = ["StandardStatus eq 'Active'"]
+    status = filters.get('status', 'all')
+    if status == 'for sale':
+        conditions.append("PropertyType eq 'Residential'")
+    elif status == 'for rent':
+        conditions.append("PropertyType eq 'ResidentialLease'")
 
     if filters.get('min_price'):
         conditions.append(f"ListPrice ge {filters['min_price']}")
@@ -91,13 +92,12 @@ def build_filter(filters):
         if odata_type:
             conditions.append(f"PropertySubType eq '{odata_type}'")
     if filters.get('search'):
-        s = filters['search']
+        s = filters['search'].replace("'", "''")
         conditions.append(
             f"(contains(UnparsedAddress, '{s}') or contains(OriginalPostalCity, '{s}') or contains(PostalCode, '{s}'))"
         )
 
     return ' and '.join(conditions)
-
 
 def build_orderby(sort):
     sort_map = {
@@ -110,33 +110,58 @@ def build_orderby(sort):
     return sort_map.get(sort, 'ModificationTimestamp desc')
 
 def fetch_properties(page=1, per_page=10, filters=None):
+    filters = filters or {}
     token = get_token()
     skip = (page - 1) * per_page
+    orderby = build_orderby(filters.get('sort', 'default'))
+    status = filters.get('status', 'all')
 
-    query = {
-        '$select': FIELDS,
-        '$top': per_page,
-        '$skip': skip,
-        '$filter': build_filter(filters or {}),
-        '$orderby': build_orderby((filters or {}).get('sort', 'default')),
-        '$count': 'true',
+    def do_request(filter_str):
+        query = {
+            '$select': FIELDS,
+            '$top': per_page,
+            '$skip': skip,
+            '$orderby': orderby,
+            '$count': 'true',
+        }
+        if filter_str:
+            query['$filter'] = filter_str
+        response = requests.get(
+            'https://idxapi.realcomp.com/odata/Property',
+            headers={'Authorization': f'Bearer {token}', 'Content-Type': 'application/json'},
+            params=query,
+        )
+        response.raise_for_status()
+        data = response.json()
+        return data.get('value', []), data.get('@odata.count', 0)
+
+    if status != 'all':
+        value, total = do_request(build_filter(filters))
+        return {'value': value, 'total': total}
+
+    # all — два запити паралельно
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+        future_sale   = executor.submit(do_request, build_filter(filters, status_override='active'))
+        future_rental = executor.submit(do_request, build_filter(filters, status_override='active_rental'))
+        sale_value,   sale_total   = future_sale.result()
+        rental_value, rental_total = future_rental.result()
+
+    combined = sale_value + rental_value
+    sort_key_map = {
+        'price_asc':  ('ListPrice', False),
+        'price_desc': ('ListPrice', True),
+        'newest':     ('ModificationTimestamp', True),
+        'sqft_asc':   ('LivingArea', False),
+        'sqft_desc':  ('LivingArea', True),
     }
+    sort = filters.get('sort', 'default')
+    if sort in sort_key_map:
+        key, reverse = sort_key_map[sort]
+        combined.sort(key=lambda x: x.get(key) or 0, reverse=reverse)
+    else:
+        combined.sort(key=lambda x: x.get('ModificationTimestamp') or '', reverse=True)
 
-    response = requests.get(
-        'https://idxapi.realcomp.com/odata/Property',
-        headers={
-            'Authorization': f'Bearer {token}',
-            'Content-Type': 'application/json',
-        },
-        params=query,
-    )
-    response.raise_for_status()
-    data = response.json()
-    return {
-        'value': data.get('value', []),
-        'total': data.get('@odata.count', 0),
-    }
-
+    return {'value': combined[:per_page], 'total': sale_total + rental_total}
 def fetch_media(listing_key):
     token = get_token()
     response = requests.get(

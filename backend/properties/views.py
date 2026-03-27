@@ -50,6 +50,8 @@ def properties_list(request):
             'sort': request.GET.get('sort', 'default'),
         }
 
+        per_page = 10
+
         result = fetch_properties(page=page, per_page=10, filters=filters)
         raw = result['value']
         total = result['total']
@@ -64,6 +66,7 @@ def properties_list(request):
                 'price': p.get('ListPrice'),
                 'status': p.get('StandardStatus'),
                 'type': p.get('PropertySubType'),
+                'property_type': p.get('PropertyType'),
                 'address': p.get('UnparsedAddress'),
                 'city': p.get('OriginalPostalCity'),
                 'zip': p.get('PostalCode'),
@@ -92,7 +95,7 @@ def properties_list(request):
             'results': data,
             'total': total,
             'page': page,
-            'has_more': len(raw) == 10,
+            'has_more': (page * per_page) < total,
         })
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
