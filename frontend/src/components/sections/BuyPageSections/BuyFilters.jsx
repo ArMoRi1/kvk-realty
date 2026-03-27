@@ -1,6 +1,5 @@
 import { Search, X } from 'lucide-react'
-import { STATUS_LABELS } from '../../../mocks/properties'
-import Dropdown from '../../layout/Dropdown'
+import Dropdown from '../../ui/Dropdown'
 
 const inputClass =
   'w-full bg-transparent border-b border-white/20 text-white placeholder-white/30 py-2 text-xs font-sans tracking-wide focus:outline-none focus:border-gold transition-colors duration-300'
@@ -15,6 +14,10 @@ function BuyFilters({
   minBaths, setMinBaths,
   minSqft, setMinSqft,
   maxSqft, setMaxSqft,
+  minYear, setMinYear,
+  maxYear, setMaxYear,
+  waterfront, setWaterfront,
+  sort, setSort,
   resultsCount,
   onClear,
   activeFiltersCount,
@@ -42,15 +45,19 @@ function BuyFilters({
 
         {/* Статус */}
         <div className="flex border border-white/20">
-          {['all', 'for sale', 'for rent'].map(s => (
+          {[
+            { value: 'all', label: 'All' },
+            { value: 'for sale', label: 'For Sale' },
+            { value: 'for rent', label: 'For Rent' },
+          ].map(s => (
             <button
-              key={s}
-              onClick={() => setStatus(s)}
+              key={s.value}
+              onClick={() => setStatus(s.value)}
               className={`px-3 sm:px-4 py-2 text-xs tracking-widest font-sans uppercase transition-all duration-300 ${
-                status === s ? 'bg-gold text-black' : 'text-white/50 hover:text-gold'
+                status === s.value ? 'bg-gold text-black' : 'text-white/50 hover:text-gold'
               }`}
             >
-              {s === 'all' ? 'All' : STATUS_LABELS[s]}
+              {s.label}
             </button>
           ))}
         </div>
@@ -68,15 +75,22 @@ function BuyFilters({
         <Dropdown label="Type" minWidth="min-w-[200px]">
           <p className="text-gold text-[10px] tracking-widest uppercase font-sans mb-3">Property Type</p>
           <div className="flex flex-col gap-2">
-            {['all', 'house', 'condo', 'townhouse'].map(t => (
+            {[
+              { value: 'all', label: 'All Types' },
+              { value: 'house', label: 'House' },
+              { value: 'condo', label: 'Condo' },
+              { value: 'townhouse', label: 'Townhouse' },
+              { value: 'multi-family', label: 'Multi-Family' },
+              { value: 'land', label: 'Land' },
+            ].map(t => (
               <button
-                key={t}
-                onClick={() => setType(t)}
+                key={t.value}
+                onClick={() => setType(t.value)}
                 className={`text-left text-xs font-sans tracking-widest uppercase py-1.5 px-2 transition-all duration-200 ${
-                  type === t ? 'text-gold bg-gold/10' : 'text-white/50 hover:text-gold'
+                  type === t.value ? 'text-gold bg-gold/10' : 'text-white/50 hover:text-gold'
                 }`}
               >
-                {t === 'all' ? 'All Types' : t.charAt(0).toUpperCase() + t.slice(1)}
+                {t.label}
               </button>
             ))}
           </div>
@@ -124,6 +138,62 @@ function BuyFilters({
           <div className="flex gap-3">
             <input type="number" placeholder="Min sqft" value={minSqft} onChange={e => setMinSqft(e.target.value)} className={inputClass} />
             <input type="number" placeholder="Max sqft" value={maxSqft} onChange={e => setMaxSqft(e.target.value)} className={inputClass} />
+          </div>
+        </Dropdown>
+
+        {/* Year Built */}
+        <Dropdown label="Year Built" minWidth="min-w-[260px]">
+          <p className="text-gold text-[10px] tracking-widest uppercase font-sans mb-3">Year Built</p>
+          <div className="flex gap-3">
+            <input type="number" placeholder="From" value={minYear} onChange={e => setMinYear(e.target.value)} className={inputClass} />
+            <input type="number" placeholder="To" value={maxYear} onChange={e => setMaxYear(e.target.value)} className={inputClass} />
+          </div>
+        </Dropdown>
+
+        {/* Waterfront */}
+        <Dropdown label={waterfront !== 'any' ? `Waterfront: ${waterfront}` : 'Waterfront'} minWidth="min-w-[180px]">
+          <p className="text-gold text-[10px] tracking-widest uppercase font-sans mb-3">Waterfront</p>
+          <div className="flex flex-col gap-2">
+            {[
+              { value: 'any', label: 'Any' },
+              { value: 'yes', label: 'Waterfront Only' },
+              { value: 'no', label: 'No Waterfront' },
+            ].map(w => (
+              <button
+                key={w.value}
+                onClick={() => setWaterfront(w.value)}
+                className={`text-left text-xs font-sans tracking-widest uppercase py-1.5 px-2 transition-all duration-200 ${
+                  waterfront === w.value ? 'text-gold bg-gold/10' : 'text-white/50 hover:text-gold'
+                }`}
+              >
+                {w.label}
+              </button>
+            ))}
+          </div>
+        </Dropdown>
+
+        {/* Sort */}
+        <Dropdown label="Sort" minWidth="min-w-[200px]">
+          <p className="text-gold text-[10px] tracking-widest uppercase font-sans mb-3">Sort By</p>
+          <div className="flex flex-col gap-2">
+            {[
+              { value: 'default', label: 'Default' },
+              { value: 'price_asc', label: 'Price ↑' },
+              { value: 'price_desc', label: 'Price ↓' },
+              { value: 'newest', label: 'Newest' },
+              { value: 'sqft_asc', label: 'SqFt ↑' },
+              { value: 'sqft_desc', label: 'SqFt ↓' },
+            ].map(s => (
+              <button
+                key={s.value}
+                onClick={() => setSort(s.value)}
+                className={`text-left text-xs font-sans tracking-widest uppercase py-1.5 px-2 transition-all duration-200 ${
+                  sort === s.value ? 'text-gold bg-gold/10' : 'text-white/50 hover:text-gold'
+                }`}
+              >
+                {s.label}
+              </button>
+            ))}
           </div>
         </Dropdown>
 

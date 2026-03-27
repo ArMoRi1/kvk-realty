@@ -4,6 +4,82 @@ from rest_framework import status
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import ContactRequest, TeamMember, BlogPost, Review, Category, Role
+from .realcomp import fetch_properties, fetch_media, fetch_first_photo
+import concurrent.futures
+import requests as req
+
+@api_view(['GET'])
+def proxy_image(request):
+    url = request.GET.get('url')
+    if not url:
+        return Response({'error': 'No URL'}, status=400)
+    try:
+        r = req.get(url, timeout=10)
+        from django.http import HttpResponse
+        return HttpResponse(r.content, content_type=r.headers.get('Content-Type', 'image/jpeg'))
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
+    
+    
+@api_view(['GET'])
+def property_media(request, listing_key):
+    try:
+        media = fetch_media(listing_key)
+        urls = [m.get('MediaURL') for m in media if m.get('MediaURL')]
+        return Response(urls)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['GET'])
+def properties_list(request):
+    try:
+        page = int(request.GET.get('page', 1))
+        per_page = 20
+        skip = (page - 1) * per_page
+
+        raw = fetch_properties(params={
+            '$top': per_page,
+            '$skip': skip,
+        })
+
+        # Паралельно тягнемо перше фото для кожного listing
+        def enrich(p):
+            try:
+                photo = fetch_first_photo(p.get('ListingKeyNumeric'))
+            except:
+                photo = None
+            return {
+                'id': p.get('ListingKeyNumeric'),
+                'price': p.get('ListPrice'),
+                'status': p.get('StandardStatus'),
+                'type': p.get('PropertySubType'),
+                'address': p.get('UnparsedAddress'),
+                'city': p.get('OriginalPostalCity'),
+                'zip': p.get('PostalCode'),
+                'beds': p.get('BedroomsTotal'),
+                'baths': p.get('BathroomsTotalInteger'),
+                'sqft': p.get('LivingArea'),
+                'year_built': p.get('YearBuilt'),
+                'waterfront': p.get('WaterfrontYN'),
+                'lat': p.get('Latitude'),
+                'lng': p.get('Longitude'),
+                'list_office': p.get('ListOfficeName'),
+                'list_office_phone': p.get('ListOfficePhone'),
+                'list_agent': p.get('ListAgentFullName'),
+                'list_agent_email': p.get('ListAgentEmail'),
+                'list_agent_phone': p.get('ListAgentDirectPhone'),
+                'photos_count': p.get('PhotosCount'),
+                'description': p.get('PublicRemarks'),
+                'updated_at': p.get('ModificationTimestamp'),
+                'image': photo,
+            }
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+            data = list(executor.map(enrich, raw))
+
+        return Response(data)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['GET'])
 def categories_list(request):
