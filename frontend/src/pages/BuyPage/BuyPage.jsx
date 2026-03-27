@@ -1,13 +1,20 @@
-import { useState, useMemo, useEffect } from 'react'
-import { getProperties } from '../../api/properties'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import axiosInstance from '../../api/axiosInstance'
 import BuyFilters from '../../components/sections/BuyPageSections/BuyFilters'
 import BuyListings from '../../components/sections/BuyPageSections/BuyListings'
 import BuyMap from '../../components/sections/BuyPageSections/BuyMap'
 import PropertyModal from '../../components/ui/PropertyModal'
 
+function useDebounce(value, delay) {
+  const [debounced, setDebounced] = useState(value)
+  useEffect(() => {
+    const timer = setTimeout(() => setDebounced(value), delay)
+    return () => clearTimeout(timer)
+  }, [value, delay])
+  return debounced
+}
+
 function BuyPage() {
-  const [listings, setListings]     = useState([])
-  const [loading, setLoading]       = useState(true)
   const [search, setSearch]         = useState('')
   const [status, setStatus]         = useState('all')
   const [type, setType]             = useState('all')
@@ -21,15 +28,83 @@ function BuyPage() {
   const [maxYear, setMaxYear]       = useState('')
   const [waterfront, setWaterfront] = useState('any')
   const [sort, setSort]             = useState('default')
-  const [activeId, setActiveId]     = useState(null)
+
+  const [listings, setListings]       = useState([])
+  const [total, setTotal]             = useState(0)
+  const [hasMore, setHasMore]         = useState(true)
+  const [loading, setLoading]         = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
+
+  const [activeId, setActiveId]         = useState(null)
   const [modalListing, setModalListing] = useState(null)
 
+  const pageRef = useRef(1)
+
+  const debouncedSearch   = useDebounce(search, 500)
+  const debouncedMinPrice = useDebounce(minPrice, 500)
+  const debouncedMaxPrice = useDebounce(maxPrice, 500)
+  const debouncedMinSqft  = useDebounce(minSqft, 500)
+  const debouncedMaxSqft  = useDebounce(maxSqft, 500)
+  const debouncedMinYear  = useDebounce(minYear, 500)
+  const debouncedMaxYear  = useDebounce(maxYear, 500)
+
+  const getParams = useCallback((p) => ({
+    page: p,
+    search: debouncedSearch,
+    status,
+    min_price: debouncedMinPrice,
+    max_price: debouncedMaxPrice,
+    min_beds: minBeds > 0 ? minBeds : '',
+    min_baths: minBaths > 0 ? minBaths : '',
+    min_sqft: debouncedMinSqft,
+    max_sqft: debouncedMaxSqft,
+    min_year: debouncedMinYear,
+    max_year: debouncedMaxYear,
+    waterfront,
+    type,
+    sort,
+  }), [
+    debouncedSearch, status, type,
+    debouncedMinPrice, debouncedMaxPrice,
+    minBeds, minBaths,
+    debouncedMinSqft, debouncedMaxSqft,
+    debouncedMinYear, debouncedMaxYear,
+    waterfront, sort,
+  ])
+
   useEffect(() => {
-    getProperties()
-      .then(res => setListings(res.data))
+    let cancelled = false
+    pageRef.current = 1
+    setLoading(true)
+    setListings([])
+
+    axiosInstance.get('/properties/', { params: getParams(1) })
+      .then(res => {
+        if (cancelled) return
+        setListings(res.data.results)
+        setTotal(res.data.total)
+        setHasMore(res.data.has_more)
+      })
+      .catch(err => { if (!cancelled) console.error(err) })
+      .finally(() => { if (!cancelled) setLoading(false) })
+
+    return () => { cancelled = true }
+  }, [getParams])
+
+  const loadMore = useCallback(() => {
+    if (loadingMore || !hasMore) return
+    const nextPage = pageRef.current + 1
+    pageRef.current = nextPage
+    setLoadingMore(true)
+
+    axiosInstance.get('/properties/', { params: getParams(nextPage) })
+      .then(res => {
+        setListings(prev => [...prev, ...res.data.results])
+        setHasMore(res.data.has_more)
+      })
       .catch(err => console.error(err))
-      .finally(() => setLoading(false))
-  }, [])
+      .finally(() => setLoadingMore(false))
+  }, [loadingMore, hasMore, getParams])
 
   const activeFiltersCount = [
     status !== 'all', type !== 'all',
@@ -50,41 +125,6 @@ function BuyPage() {
     setWaterfront('any'); setSort('default')
   }
 
-  const filtered = useMemo(() => {
-    let result = listings.filter(l => {
-      if (search && !l.address?.toLowerCase().includes(search.toLowerCase()) &&
-          !l.city?.toLowerCase().includes(search.toLowerCase()) &&
-          !l.zip?.includes(search)) return false
-      if (status !== 'all' && l.status?.toLowerCase() !== status) return false
-      if (type !== 'all' && l.type?.toLowerCase() !== type) return false
-      if (minPrice && l.price < Number(minPrice)) return false
-      if (maxPrice && l.price > Number(maxPrice)) return false
-      if (minBeds > 0 && (l.beds || 0) < minBeds) return false
-      if (minBaths > 0 && (l.baths || 0) < minBaths) return false
-      if (minSqft && (l.sqft || 0) < Number(minSqft)) return false
-      if (maxSqft && (l.sqft || 0) > Number(maxSqft)) return false
-      if (minYear && (l.year_built || 0) < Number(minYear)) return false
-      if (maxYear && (l.year_built || 0) > Number(maxYear)) return false
-      if (waterfront === 'yes' && !l.waterfront) return false
-      if (waterfront === 'no' && l.waterfront) return false
-      return true
-    })
-
-    if (sort === 'price_asc') result = [...result].sort((a, b) => a.price - b.price)
-    if (sort === 'price_desc') result = [...result].sort((a, b) => b.price - a.price)
-    if (sort === 'newest') result = [...result].sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
-    if (sort === 'sqft_asc') result = [...result].sort((a, b) => (a.sqft || 0) - (b.sqft || 0))
-    if (sort === 'sqft_desc') result = [...result].sort((a, b) => (b.sqft || 0) - (a.sqft || 0))
-
-    return result
-  }, [listings, search, status, type, minPrice, maxPrice, minBeds, minBaths, minSqft, maxSqft, minYear, maxYear, waterfront, sort])
-
-  if (loading) return (
-    <div className="w-full min-h-screen bg-dark flex items-center justify-center">
-      <p className="text-gold text-sm tracking-widest uppercase font-sans">Loading listings...</p>
-    </div>
-  )
-
   return (
     <div className="w-full min-h-screen bg-dark flex flex-col pt-[72px]">
 
@@ -102,27 +142,31 @@ function BuyPage() {
         maxYear={maxYear}           setMaxYear={setMaxYear}
         waterfront={waterfront}     setWaterfront={setWaterfront}
         sort={sort}                 setSort={setSort}
-        resultsCount={filtered.length}
+        resultsCount={total}
         activeFiltersCount={activeFiltersCount}
         onClear={clearAll}
       />
 
       <div className="flex overflow-hidden" style={{ height: 'calc(100vh - 72px - 57px)' }}>
         <BuyListings
-          listings={filtered}
+          listings={listings}
+          loading={loading}
+          loadingMore={loadingMore}
+          hasMore={hasMore}
+          onLoadMore={loadMore}
           activeId={activeId}
           onCardClick={(id) => {
             setActiveId(prev => prev === id ? null : id)
-            setModalListing(filtered.find(l => l.id === id) || null)
+            setModalListing(listings.find(l => l.id === id) || null)
           }}
           onClear={clearAll}
         />
         <BuyMap
-          listings={filtered}
+          listings={listings}
           activeId={activeId}
           onPinClick={(id) => {
             setActiveId(id)
-            setModalListing(filtered.find(l => l.id === id) || null)
+            setModalListing(listings.find(l => l.id === id) || null)
           }}
         />
       </div>

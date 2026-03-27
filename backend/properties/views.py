@@ -20,7 +20,7 @@ def proxy_image(request):
     except Exception as e:
         return Response({'error': str(e)}, status=500)
     
-    
+
 @api_view(['GET'])
 def property_media(request, listing_key):
     try:
@@ -34,15 +34,26 @@ def property_media(request, listing_key):
 def properties_list(request):
     try:
         page = int(request.GET.get('page', 1))
-        per_page = 20
-        skip = (page - 1) * per_page
+        filters = {
+            'status': request.GET.get('status', 'all'),
+            'search': request.GET.get('search', ''),
+            'min_price': request.GET.get('min_price', ''),
+            'max_price': request.GET.get('max_price', ''),
+            'min_beds': request.GET.get('min_beds', ''),
+            'min_baths': request.GET.get('min_baths', ''),
+            'min_sqft': request.GET.get('min_sqft', ''),
+            'max_sqft': request.GET.get('max_sqft', ''),
+            'min_year': request.GET.get('min_year', ''),
+            'max_year': request.GET.get('max_year', ''),
+            'waterfront': request.GET.get('waterfront', 'any'),
+            'type': request.GET.get('type', 'all'),
+            'sort': request.GET.get('sort', 'default'),
+        }
 
-        raw = fetch_properties(params={
-            '$top': per_page,
-            '$skip': skip,
-        })
+        result = fetch_properties(page=page, per_page=10, filters=filters)
+        raw = result['value']
+        total = result['total']
 
-        # Паралельно тягнемо перше фото для кожного listing
         def enrich(p):
             try:
                 photo = fetch_first_photo(p.get('ListingKeyNumeric'))
@@ -77,10 +88,14 @@ def properties_list(request):
         with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
             data = list(executor.map(enrich, raw))
 
-        return Response(data)
+        return Response({
+            'results': data,
+            'total': total,
+            'page': page,
+            'has_more': len(raw) == 10,
+        })
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 @api_view(['GET'])
 def categories_list(request):
     categories = Category.objects.all()
@@ -232,7 +247,7 @@ Message: {message or '—'}
 def reviews_list(request):
     agent_id = request.GET.get('agent')
     page = int(request.GET.get('page', 1))
-    per_page = int(request.GET.get('per_page', 6))
+    per_page = int(request.GET.get('per_page', 10))
 
     reviews = Review.objects.filter(is_published=True)
     if agent_id:

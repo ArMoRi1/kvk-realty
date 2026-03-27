@@ -49,17 +49,78 @@ def get_token():
     cache.set(TOKEN_CACHE_KEY, token, timeout=60 * 60 * 23)
     return token
 
+def build_filter(filters):
+    status = filters.get('status', 'all')
 
-def fetch_properties(params=None):
+    if status == 'for rent':
+        conditions = ["StandardStatus eq 'Active Rental'"]
+    elif status == 'for sale':
+        conditions = ["StandardStatus eq 'Active'"]
+    else:  # all
+        conditions = ["StandardStatus eq 'Active'"]
+
+    if filters.get('min_price'):
+        conditions.append(f"ListPrice ge {filters['min_price']}")
+    if filters.get('max_price'):
+        conditions.append(f"ListPrice le {filters['max_price']}")
+    if filters.get('min_beds'):
+        conditions.append(f"BedroomsTotal ge {filters['min_beds']}")
+    if filters.get('min_baths'):
+        conditions.append(f"BathroomsTotalInteger ge {filters['min_baths']}")
+    if filters.get('min_sqft'):
+        conditions.append(f"LivingArea ge {filters['min_sqft']}")
+    if filters.get('max_sqft'):
+        conditions.append(f"LivingArea le {filters['max_sqft']}")
+    if filters.get('min_year'):
+        conditions.append(f"YearBuilt ge {filters['min_year']}")
+    if filters.get('max_year'):
+        conditions.append(f"YearBuilt le {filters['max_year']}")
+    if filters.get('waterfront') == 'yes':
+        conditions.append("WaterfrontYN eq true")
+    if filters.get('waterfront') == 'no':
+        conditions.append("WaterfrontYN eq false")
+    if filters.get('type') and filters['type'] != 'all':
+        type_map = {
+            'house': 'SingleFamilyResidence',
+            'condo': 'Condominium',
+            'townhouse': 'Townhouse',
+            'multi-family': 'MultiFamily',
+            'land': 'Land',
+        }
+        odata_type = type_map.get(filters['type'])
+        if odata_type:
+            conditions.append(f"PropertySubType eq '{odata_type}'")
+    if filters.get('search'):
+        s = filters['search']
+        conditions.append(
+            f"(contains(UnparsedAddress, '{s}') or contains(OriginalPostalCity, '{s}') or contains(PostalCode, '{s}'))"
+        )
+
+    return ' and '.join(conditions)
+
+
+def build_orderby(sort):
+    sort_map = {
+        'price_asc': 'ListPrice asc',
+        'price_desc': 'ListPrice desc',
+        'newest': 'ModificationTimestamp desc',
+        'sqft_asc': 'LivingArea asc',
+        'sqft_desc': 'LivingArea desc',
+    }
+    return sort_map.get(sort, 'ModificationTimestamp desc')
+
+def fetch_properties(page=1, per_page=10, filters=None):
     token = get_token()
+    skip = (page - 1) * per_page
 
     query = {
         '$select': FIELDS,
-        '$top': 50,
-        '$filter': "StandardStatus eq 'Active'",
+        '$top': per_page,
+        '$skip': skip,
+        '$filter': build_filter(filters or {}),
+        '$orderby': build_orderby((filters or {}).get('sort', 'default')),
+        '$count': 'true',
     }
-    if params:
-        query.update(params)
 
     response = requests.get(
         'https://idxapi.realcomp.com/odata/Property',
@@ -70,7 +131,11 @@ def fetch_properties(params=None):
         params=query,
     )
     response.raise_for_status()
-    return response.json().get('value', [])
+    data = response.json()
+    return {
+        'value': data.get('value', []),
+        'total': data.get('@odata.count', 0),
+    }
 
 def fetch_media(listing_key):
     token = get_token()
