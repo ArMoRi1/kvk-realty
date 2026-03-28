@@ -147,6 +147,17 @@ def fetch_properties(page=1, per_page=10, filters=None):
         rental_value, rental_total = future_rental.result()
 
     combined = sale_value + rental_value
+
+    # Дедуплікація по ListingKeyNumeric
+    seen = set()
+    unique = []
+    for item in combined:
+        key = item.get('ListingKeyNumeric')
+        if key not in seen:
+            seen.add(key)
+            unique.append(item)
+    combined = unique
+
     sort_key_map = {
         'price_asc':  ('ListPrice', False),
         'price_desc': ('ListPrice', True),

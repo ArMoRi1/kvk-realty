@@ -24,48 +24,51 @@ const INITIAL_FILTERS = {
 }
 
 function BuyPage() {
-  const [filters, setFilters] = useState(INITIAL_FILTERS)
-  const [listings, setListings]     = useState([])
-  const [total, setTotal]           = useState(0)
-  const [hasMore, setHasMore]       = useState(true)
-  const [loading, setLoading]       = useState(true)
-  const [loadingMore, setLoadingMore] = useState(false)
-  const [activeId, setActiveId]     = useState(null)
+  const [filters, setFilters]           = useState(INITIAL_FILTERS)
+  const [listings, setListings]         = useState([])
+  const [total, setTotal]               = useState(0)
+  const [hasMore, setHasMore]           = useState(true)
+  const [loading, setLoading]           = useState(true)
+  const [loadingMore, setLoadingMore]   = useState(false)
+  const [activeId, setActiveId]         = useState(null)
   const [modalListing, setModalListing] = useState(null)
-  const pageRef = useRef(1)
 
-  const debouncedSearch   = useDebounce(filters.search, 500)
-  const debouncedMinPrice = useDebounce(filters.minPrice, 500)
-  const debouncedMaxPrice = useDebounce(filters.maxPrice, 500)
-  const debouncedMinSqft  = useDebounce(filters.minSqft, 500)
-  const debouncedMaxSqft  = useDebounce(filters.maxSqft, 500)
-  const debouncedMinYear  = useDebounce(filters.minYear, 500)
-  const debouncedMaxYear  = useDebounce(filters.maxYear, 500)
+  const pageRef    = useRef(1)
+  const paramsRef  = useRef({})
 
-  const buildParams = (page) => ({
-    page,
-    search:    debouncedSearch,
-    status:    filters.status,
-    min_price: debouncedMinPrice,
-    max_price: debouncedMaxPrice,
-    min_beds:  filters.minBeds > 0 ? filters.minBeds : '',
-    min_baths: filters.minBaths > 0 ? filters.minBaths : '',
-    min_sqft:  debouncedMinSqft,
-    max_sqft:  debouncedMaxSqft,
-    min_year:  debouncedMinYear,
-    max_year:  debouncedMaxYear,
+  const debouncedSearch   = useDebounce(filters.search,    500)
+  const debouncedMinPrice = useDebounce(filters.minPrice,  500)
+  const debouncedMaxPrice = useDebounce(filters.maxPrice,  500)
+  const debouncedMinSqft  = useDebounce(filters.minSqft,   500)
+  const debouncedMaxSqft  = useDebounce(filters.maxSqft,   500)
+  const debouncedMinYear  = useDebounce(filters.minYear,   500)
+  const debouncedMaxYear  = useDebounce(filters.maxYear,   500)
+
+  // Завжди актуальні параметри доступні через ref (для loadMore)
+  paramsRef.current = {
+    search:     debouncedSearch,
+    status:     filters.status,
+    min_price:  debouncedMinPrice,
+    max_price:  debouncedMaxPrice,
+    min_beds:   filters.minBeds > 0 ? filters.minBeds : '',
+    min_baths:  filters.minBaths > 0 ? filters.minBaths : '',
+    min_sqft:   debouncedMinSqft,
+    max_sqft:   debouncedMaxSqft,
+    min_year:   debouncedMinYear,
+    max_year:   debouncedMaxYear,
     waterfront: filters.waterfront,
-    type:      filters.type,
-    sort:      filters.sort,
-  })
+    type:       filters.type,
+    sort:       filters.sort,
+  }
 
+  // Початковий/фільтрований запит
   useEffect(() => {
     let cancelled = false
     pageRef.current = 1
     setLoading(true)
     setListings([])
 
-    axiosInstance.get('/properties/', { params: buildParams(1) })
+    axiosInstance.get('/properties/', { params: { page: 1, ...paramsRef.current } })
       .then(res => {
         if (cancelled) return
         setListings(res.data.results)
@@ -76,6 +79,7 @@ function BuyPage() {
       .finally(() => { if (!cancelled) setLoading(false) })
 
     return () => { cancelled = true }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     debouncedSearch, filters.status, filters.type,
     debouncedMinPrice, debouncedMaxPrice,
@@ -85,31 +89,34 @@ function BuyPage() {
     filters.waterfront, filters.sort,
   ])
 
+  // Догрузка — тільки дві залежності, параметри беремо з ref
   const loadMore = useCallback(() => {
     if (loadingMore || !hasMore) return
     const nextPage = pageRef.current + 1
     pageRef.current = nextPage
     setLoadingMore(true)
 
-    axiosInstance.get('/properties/', { params: buildParams(nextPage) })
+    axiosInstance.get('/properties/', { params: { page: nextPage, ...paramsRef.current } })
       .then(res => {
-        setListings(prev => [...prev, ...res.data.results])
+        setListings(prev => {
+          const existingIds = new Set(prev.map(l => l.id))
+          const newItems = res.data.results.filter(l => !existingIds.has(l.id))
+          return [...prev, ...newItems]
+        })
         setHasMore(res.data.has_more)
       })
       .catch(err => console.error(err))
       .finally(() => setLoadingMore(false))
-  }, [loadingMore, hasMore, filters, debouncedSearch, debouncedMinPrice,
-      debouncedMaxPrice, debouncedMinSqft, debouncedMaxSqft,
-      debouncedMinYear, debouncedMaxYear])
+  }, [loadingMore, hasMore])
 
   const set = (key) => (val) => setFilters(prev => ({ ...prev, [key]: val }))
 
   const activeFiltersCount = [
-    filters.status !== 'all', filters.type !== 'all',
-    filters.minPrice, filters.maxPrice,
-    filters.minBeds > 0, filters.minBaths > 0,
-    filters.minSqft, filters.maxSqft,
-    filters.minYear, filters.maxYear,
+    filters.status !== 'all',   filters.type !== 'all',
+    filters.minPrice,           filters.maxPrice,
+    filters.minBeds > 0,        filters.minBaths > 0,
+    filters.minSqft,            filters.maxSqft,
+    filters.minYear,            filters.maxYear,
     filters.waterfront !== 'any',
     filters.sort !== 'default',
   ].filter(Boolean).length
