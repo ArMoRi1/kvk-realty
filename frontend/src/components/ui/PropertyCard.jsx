@@ -1,5 +1,13 @@
 import { useState } from 'react'
-import { Bed, Bath, Maximize2, Heart, Home } from 'lucide-react'
+import { Bed, Bath, Maximize2, Heart, Home, Calendar, Waves } from 'lucide-react'
+
+const TYPE_MAP = {
+  SingleFamilyResidence: 'House',
+  Condominium: 'Condo',
+  Townhouse: 'Townhouse',
+  MultiFamily: 'Multi-Family',
+  Land: 'Land',
+}
 
 function formatPrice(price, status) {
   if (!price) return '—'
@@ -34,7 +42,7 @@ function PropertyCard({ listing, isActive, onClick }) {
           </div>
         )}
 
-        {/* Статус бейдж */}
+        {/* Статус */}
         <span className={`absolute top-3 left-3 text-[10px] tracking-widest uppercase font-sans px-2 py-1 ${
           listing.status === 'Active Rental'
             ? 'bg-blue-500/90 text-white'
@@ -46,7 +54,15 @@ function PropertyCard({ listing, isActive, onClick }) {
         {/* Тип */}
         {listing.type && (
           <span className="absolute top-3 right-10 text-[10px] tracking-widest uppercase font-sans px-2 py-1 bg-black/60 text-white/80">
-            {listing.type.replace('SingleFamilyResidence', 'House').replace('Condominium', 'Condo')}
+            {TYPE_MAP[listing.type] || listing.type}
+          </span>
+        )}
+
+        {/* Waterfront бейдж */}
+        {listing.waterfront && (
+          <span className="absolute bottom-3 left-3 flex items-center gap-1 text-[10px] tracking-widest uppercase font-sans px-2 py-1 bg-blue-500/80 text-white">
+            <Waves size={10} />
+            Waterfront
           </span>
         )}
 
@@ -55,10 +71,7 @@ function PropertyCard({ listing, isActive, onClick }) {
           onClick={e => { e.stopPropagation(); setSaved(p => !p) }}
           className="absolute top-2.5 right-2.5 p-1.5 bg-black/40 hover:bg-black/70 transition-colors duration-200"
         >
-          <Heart
-            size={14}
-            className={saved ? 'fill-gold text-gold' : 'text-white/70'}
-          />
+          <Heart size={14} className={saved ? 'fill-gold text-gold' : 'text-white/70'} />
         </button>
       </div>
 
@@ -67,11 +80,13 @@ function PropertyCard({ listing, isActive, onClick }) {
         <p className="text-white font-serif text-xl mb-1">
           {formatPrice(listing.price, listing.status)}
         </p>
-        <p className="text-white/70 font-sans text-sm mb-1">{listing.address || '—'}</p>
-        <p className="text-white/40 font-sans text-xs tracking-widest uppercase mb-3">{listing.city || '—'}</p>
+        <p className="text-white/70 font-sans text-sm mb-0.5">{listing.address || '—'}</p>
+        <p className="text-white/40 font-sans text-xs tracking-widest uppercase mb-3">
+          {listing.city || '—'}{listing.zip ? `, ${listing.zip}` : ''}
+        </p>
 
-        {/* Stats */}
-        <div className="flex items-center gap-4 text-white/50 text-xs font-sans border-t border-white/10 pt-3">
+        {/* Основні stats */}
+        <div className="flex items-center gap-4 text-white/50 text-xs font-sans border-t border-white/10 pt-3 mb-3">
           <span className="flex items-center gap-1.5">
             <Bed size={13} strokeWidth={1.5} />
             {listing.beds ?? '—'} bd
@@ -84,11 +99,17 @@ function PropertyCard({ listing, isActive, onClick }) {
             <Maximize2 size={12} strokeWidth={1.5} />
             {listing.sqft ? listing.sqft.toLocaleString() : '—'} sqft
           </span>
+          {listing.year_built && (
+            <span className="flex items-center gap-1.5 ml-auto">
+              <Calendar size={11} strokeWidth={1.5} />
+              {listing.year_built}
+            </span>
+          )}
         </div>
 
-        {/* Listing broker — обов'язково по правилах IDX */}
+        {/* Listing broker — обов'язково IDX §18.2.12 */}
         {listing.list_office && (
-          <p className="text-white/20 text-[10px] font-sans mt-3 tracking-wide border-t border-white/5 pt-2">
+          <p className="text-white/20 text-[10px] font-sans tracking-wide border-t border-white/5 pt-2">
             Listed by {listing.list_office}
           </p>
         )}
