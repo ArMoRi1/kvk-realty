@@ -68,6 +68,14 @@ def properties_list(request):
         listing_keys = [p.get('ListingKeyNumeric') for p in raw]
         photos = fetch_first_photos_batch(listing_keys)
 
+        PROPERTY_TYPE_MAP = {
+            'SingleFamilyResidence': 'House',
+            'Condominium': 'Condo',
+            'Townhouse': 'Townhouse',
+            'MultiFamily': 'Multi-Family',
+            'Land': 'Land',
+        }
+
         data = [{
             'id':               p.get('ListingKeyNumeric'),
             'price':            p.get('ListPrice'),
@@ -93,6 +101,14 @@ def properties_list(request):
             'description':      p.get('PublicRemarks'),
             'updated_at':       p.get('ModificationTimestamp'),
             'image':            photos.get(p.get('ListingKeyNumeric')),
+            'details': [
+                {'label': 'Bedrooms',   'value': p.get('BedroomsTotal') or '—'},
+                {'label': 'Bathrooms',  'value': p.get('BathroomsTotalInteger') or '—'},
+                {'label': 'Sq. Ft.',    'value': f"{int(p.get('LivingArea')):,}" if p.get('LivingArea') else '—'},
+                {'label': 'Year Built', 'value': p.get('YearBuilt') or '—'},
+                {'label': 'Type',       'value': PROPERTY_TYPE_MAP.get(p.get('PropertySubType'), p.get('PropertySubType')) or '—'},
+                {'label': 'Waterfront', 'value': 'Yes' if p.get('WaterfrontYN') else 'No'},
+            ],
         } for p in raw]
 
         response_data = {
