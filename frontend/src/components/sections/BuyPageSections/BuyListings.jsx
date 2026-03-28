@@ -4,20 +4,31 @@ import PropertyCard from '../../ui/PropertyCard'
 
 function BuyListings({ listings, loading, loadingMore, hasMore, onLoadMore, activeId, onCardClick, onClear }) {
   const bottomRef = useRef(null)
+  const onLoadMoreRef = useRef(onLoadMore)
+
+  // Завжди актуальна функція без перестворення observer
+  useEffect(() => {
+    onLoadMoreRef.current = onLoadMore
+  }, [onLoadMore])
 
   useEffect(() => {
-    if (!hasMore || loadingMore) return
+    if (!hasMore) return
+
     const observer = new IntersectionObserver(
       entries => {
-        if (entries[0].isIntersecting) onLoadMore()
+        if (entries[0].isIntersecting) {
+          onLoadMoreRef.current()
+        }
       },
-      { threshold: 0.1, rootMargin: '100px' }
+      { threshold: 0, rootMargin: '200px' }
     )
+
     if (bottomRef.current) {
       observer.observe(bottomRef.current)
     }
+
     return () => observer.disconnect()
-  }, [hasMore, loadingMore, onLoadMore])
+  }, [hasMore, listings.length]) // перестворюємо після кожної догрузки
 
   if (loading) return (
     <div className="w-full lg:w-1/2 border-r border-white/10 flex items-center justify-center">
@@ -53,14 +64,12 @@ function BuyListings({ listings, loading, loadingMore, hasMore, onLoadMore, acti
             ))}
           </div>
 
-          {/* Lazy load trigger */}
-          {hasMore && (
-            <div ref={bottomRef} className="flex justify-center py-6">
-              {loadingMore && (
-                <p className="text-white/20 text-xs tracking-widest uppercase font-sans">Loading more...</p>
-              )}
-            </div>
-          )}
+          {/* Trigger — завжди в DOM поки є hasMore */}
+          <div ref={bottomRef} className="flex justify-center py-6 min-h-[60px]">
+            {loadingMore && (
+              <p className="text-white/20 text-xs tracking-widest uppercase font-sans">Loading more...</p>
+            )}
+          </div>
 
           {!hasMore && listings.length > 0 && (
             <div className="flex justify-center py-4">
