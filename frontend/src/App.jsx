@@ -11,6 +11,8 @@ import ReviewsPage from './pages/ReviewsPage/ReviewsPage'
 import NotFoundPage from './pages/TechnicalPages/NotFoundPage'
 import UnderConstructionPage from './pages/TechnicalPages/UnderConstructionPage'
 import ServerErrorPage from './pages/TechnicalPages/ServerErrorPage'
+import MortgagePage from './pages/MortgagePage/MortgagePage'
+
 function App() {
 
 useEffect(() => {
@@ -33,6 +35,7 @@ useEffect(() => {
           <Route path="blog" element={<BlogPage />} />
           <Route path="blog/:id" element={<BlogPostPage />} />
           <Route path="reviews" element={<ReviewsPage />} />
+          <Route path="mortgage-calculator" element={<MortgagePage />} />
         </Route>
 
         <Route path="/agents" element={<AgentsPage />} />
