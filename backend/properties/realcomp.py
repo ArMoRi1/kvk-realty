@@ -1,5 +1,4 @@
 import requests
-import concurrent.futures
 from django.conf import settings
 from django.core.cache import cache
 
@@ -35,7 +34,6 @@ def get_token():
     token = cache.get(TOKEN_CACHE_KEY)
     if token:
         return token
-
     response = requests.post(
         'https://auth.realcomp.com/Token',
         headers={'Content-Type': 'application/json'},
@@ -51,14 +49,18 @@ def get_token():
     cache.set(TOKEN_CACHE_KEY, token, timeout=60 * 60 * 23)
     return token
 
+
 def build_filter(filters, status_override=None):
     conditions = []
+    status = status_override or filters.get('status', 'all')
 
-    status = filters.get('status', 'all')
     if status == 'for sale':
         conditions.append("PropertyType eq 'Residential'")
     elif status == 'for rent':
         conditions.append("PropertyType eq 'ResidentialLease'")
+    # all — не фільтруємо по типу
+
+    conditions.append("StandardStatus eq 'Active'")
 
     if filters.get('min_price'):
         conditions.append(f"ListPrice ge {filters['min_price']}")
@@ -99,98 +101,109 @@ def build_filter(filters, status_override=None):
 
     return ' and '.join(conditions)
 
+
 def build_orderby(sort):
     sort_map = {
-        'price_asc': 'ListPrice asc',
+        'price_asc':  'ListPrice asc',
         'price_desc': 'ListPrice desc',
-        'newest': 'ModificationTimestamp desc',
-        'sqft_asc': 'LivingArea asc',
-        'sqft_desc': 'LivingArea desc',
+        'newest':     'ModificationTimestamp desc',
+        'sqft_asc':   'LivingArea asc',
+        'sqft_desc':  'LivingArea desc',
     }
     return sort_map.get(sort, 'ModificationTimestamp desc')
+
 
 def fetch_properties(page=1, per_page=10, filters=None):
     filters = filters or {}
     token = get_token()
     skip = (page - 1) * per_page
-    orderby = build_orderby(filters.get('sort', 'default'))
-    status = filters.get('status', 'all')
 
-    def do_request(filter_str):
-        query = {
-            '$select': FIELDS,
-            '$top': per_page,
-            '$skip': skip,
-            '$orderby': orderby,
-            '$count': 'true',
-        }
-        if filter_str:
-            query['$filter'] = filter_str
-        response = requests.get(
-            'https://idxapi.realcomp.com/odata/Property',
-            headers={'Authorization': f'Bearer {token}', 'Content-Type': 'application/json'},
-            params=query,
-        )
-        response.raise_for_status()
-        data = response.json()
-        return data.get('value', []), data.get('@odata.count', 0)
-
-    if status != 'all':
-        value, total = do_request(build_filter(filters))
-        return {'value': value, 'total': total}
-
-    # all — два запити паралельно
-    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
-        future_sale   = executor.submit(do_request, build_filter(filters, status_override='active'))
-        future_rental = executor.submit(do_request, build_filter(filters, status_override='active_rental'))
-        sale_value,   sale_total   = future_sale.result()
-        rental_value, rental_total = future_rental.result()
-
-    combined = sale_value + rental_value
-
-    # Дедуплікація по ListingKeyNumeric
-    seen = set()
-    unique = []
-    for item in combined:
-        key = item.get('ListingKeyNumeric')
-        if key not in seen:
-            seen.add(key)
-            unique.append(item)
-    combined = unique
-
-    sort_key_map = {
-        'price_asc':  ('ListPrice', False),
-        'price_desc': ('ListPrice', True),
-        'newest':     ('ModificationTimestamp', True),
-        'sqft_asc':   ('LivingArea', False),
-        'sqft_desc':  ('LivingArea', True),
+    query = {
+        '$select': FIELDS,
+        '$top': per_page,
+        '$skip': skip,
+        '$filter': build_filter(filters),
+        '$orderby': build_orderby(filters.get('sort', 'default')),
+        '$count': 'true',
     }
-    sort = filters.get('sort', 'default')
-    if sort in sort_key_map:
-        key, reverse = sort_key_map[sort]
-        combined.sort(key=lambda x: x.get(key) or 0, reverse=reverse)
-    else:
-        combined.sort(key=lambda x: x.get('ModificationTimestamp') or '', reverse=True)
 
-    return {'value': combined[:per_page], 'total': sale_total + rental_total}
-def fetch_media(listing_key):
-    token = get_token()
     response = requests.get(
-        f'https://idxapi.realcomp.com/odata/Media',
+        'https://idxapi.realcomp.com/odata/Property',
         headers={
             'Authorization': f'Bearer {token}',
             'Content-Type': 'application/json',
         },
-        params={
-			'$filter': f'ResourceRecordKeyNumeric eq {listing_key}',
-			'$select': 'MediaURL,Order',
-			'$orderby': 'Order',
-		}
+        params=query,
     )
     response.raise_for_status()
-    return response.json().get('value', [])
+    data = response.json()
+    return {
+        'value': data.get('value', []),
+        'total': data.get('@odata.count', 0),
+    }
 
-def fetch_first_photo(listing_key):
+
+def fetch_first_photos_batch(listing_keys):
+    if not listing_keys:
+        return {}
+
+    result = {}
+    uncached_keys = []
+    for key in listing_keys:
+        cached = cache.get(f'photo_{key}')
+        if cached is not None:
+            result[key] = cached or None
+        else:
+            uncached_keys.append(key)
+
+    if not uncached_keys:
+        return result
+
+    token = get_token()
+    keys_filter = ' or '.join(
+        f'ResourceRecordKeyNumeric eq {k}' for k in uncached_keys
+    )
+
+    def do_request(tok):
+        return requests.get(
+            'https://idxapi.realcomp.com/odata/Media',
+            headers={
+                'Authorization': f'Bearer {tok}',
+                'Content-Type': 'application/json',
+            },
+            params={
+                '$filter': keys_filter,
+                '$select': 'ResourceRecordKeyNumeric,MediaURL,Order',
+                '$orderby': 'ResourceRecordKeyNumeric,Order',
+            }
+        )
+
+    response = do_request(token)
+    if response.status_code == 401:
+        cache.delete(TOKEN_CACHE_KEY)
+        response = do_request(get_token())
+
+    response.raise_for_status()
+    media_list = response.json().get('value', [])
+
+    seen = set()
+    for media in media_list:
+        key = media.get('ResourceRecordKeyNumeric')
+        url = media.get('MediaURL')
+        if key and key not in seen:
+            seen.add(key)
+            result[key] = url
+            cache.set(f'photo_{key}', url or '', timeout=60 * 60 * 12)
+
+    for key in uncached_keys:
+        if key not in seen:
+            result[key] = None
+            cache.set(f'photo_{key}', '', timeout=60 * 60 * 12)
+
+    return result
+
+
+def fetch_media(listing_key):
     token = get_token()
     response = requests.get(
         'https://idxapi.realcomp.com/odata/Media',
@@ -200,32 +213,9 @@ def fetch_first_photo(listing_key):
         },
         params={
             '$filter': f'ResourceRecordKeyNumeric eq {listing_key}',
-            '$select': 'MediaURL',
+            '$select': 'MediaURL,Order',
             '$orderby': 'Order',
-            '$top': 1,
         }
     )
-    
-    # Якщо токен протух — оновлюємо і пробуємо ще раз
-    if response.status_code == 401:
-        cache.delete(TOKEN_CACHE_KEY)
-        token = get_token()
-        response = requests.get(
-            'https://idxapi.realcomp.com/odata/Media',
-            headers={
-                'Authorization': f'Bearer {token}',
-                'Content-Type': 'application/json',
-            },
-            params={
-                '$filter': f'ResourceRecordKeyNumeric eq {listing_key}',
-                '$select': 'MediaURL',
-                '$orderby': 'Order',
-                '$top': 1,
-            }
-        )
-
     response.raise_for_status()
-    value = response.json().get('value', [])
-
-    url = value[0].get('MediaURL') if value else None
-    return url
+    return response.json().get('value', [])
