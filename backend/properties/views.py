@@ -64,7 +64,7 @@ def properties_list(request):
             return {
                 'id': p.get('ListingKeyNumeric'),
                 'price': p.get('ListPrice'),
-                'status': p.get('StandardStatus'),
+                'status': 'Active Rental' if p.get('PropertyType') == 'ResidentialLease' else p.get('StandardStatus'),
                 'type': p.get('PropertySubType'),
                 'property_type': p.get('PropertyType'),
                 'address': p.get('UnparsedAddress'),
