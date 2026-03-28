@@ -43,8 +43,8 @@ def properties_list(request):
             'search':    request.GET.get('search', ''),
             'min_price': request.GET.get('min_price', ''),
             'max_price': request.GET.get('max_price', ''),
-            'min_beds':  request.GET.get('min_beds', ''),
-            'min_baths': request.GET.get('min_baths', ''),
+            'beds':      request.GET.get('beds', ''),      # було min_beds
+            'baths':     request.GET.get('baths', ''),     # було min_baths
             'min_sqft':  request.GET.get('min_sqft', ''),
             'max_sqft':  request.GET.get('max_sqft', ''),
             'min_year':  request.GET.get('min_year', ''),

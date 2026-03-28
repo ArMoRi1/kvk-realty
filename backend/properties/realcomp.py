@@ -58,7 +58,6 @@ def build_filter(filters, status_override=None):
         conditions.append("PropertyType eq 'Residential'")
     elif status == 'for rent':
         conditions.append("PropertyType eq 'ResidentialLease'")
-    # all — не фільтруємо по типу
 
     conditions.append("StandardStatus eq 'Active'")
 
@@ -66,10 +65,24 @@ def build_filter(filters, status_override=None):
         conditions.append(f"ListPrice ge {filters['min_price']}")
     if filters.get('max_price'):
         conditions.append(f"ListPrice le {filters['max_price']}")
-    if filters.get('min_beds'):
-        conditions.append(f"BedroomsTotal ge {filters['min_beds']}")
-    if filters.get('min_baths'):
-        conditions.append(f"BathroomsTotalInteger ge {filters['min_baths']}")
+
+    if filters.get('beds'):
+        beds_list = [b.strip() for b in str(filters['beds']).split(',') if b.strip()]
+        if len(beds_list) == 1:
+            conditions.append(f"BedroomsTotal eq {beds_list[0]}")
+        elif len(beds_list) > 1:
+            or_clause = ' or '.join(f"BedroomsTotal eq {b}" for b in beds_list)
+            conditions.append(f"({or_clause})")
+
+    if filters.get('baths'):
+        baths_list = [b.strip() for b in str(filters['baths']).split(',') if b.strip()]
+        if len(baths_list) == 1:
+            conditions.append(f"BathroomsTotalInteger eq {baths_list[0]}")
+        elif len(baths_list) > 1:
+            or_clause = ' or '.join(f"BathroomsTotalInteger eq {b}" for b in baths_list)
+            conditions.append(f"({or_clause})")
+
+
     if filters.get('min_sqft'):
         conditions.append(f"LivingArea ge {filters['min_sqft']}")
     if filters.get('max_sqft'):

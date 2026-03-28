@@ -17,7 +17,7 @@ function useDebounce(value, delay) {
 const INITIAL_FILTERS = {
   search: '', status: 'all', type: 'all',
   minPrice: '', maxPrice: '',
-  minBeds: 0, minBaths: 0,
+  beds: [], baths: [],
   minSqft: '', maxSqft: '',
   minYear: '', maxYear: '',
   waterfront: 'any', sort: 'default',
@@ -33,25 +33,24 @@ function BuyPage() {
   const [activeId, setActiveId]         = useState(null)
   const [modalListing, setModalListing] = useState(null)
 
-  const pageRef    = useRef(1)
-  const paramsRef  = useRef({})
+  const pageRef   = useRef(1)
+  const paramsRef = useRef({})
 
-  const debouncedSearch   = useDebounce(filters.search,    500)
-  const debouncedMinPrice = useDebounce(filters.minPrice,  500)
-  const debouncedMaxPrice = useDebounce(filters.maxPrice,  500)
-  const debouncedMinSqft  = useDebounce(filters.minSqft,   500)
-  const debouncedMaxSqft  = useDebounce(filters.maxSqft,   500)
-  const debouncedMinYear  = useDebounce(filters.minYear,   500)
-  const debouncedMaxYear  = useDebounce(filters.maxYear,   500)
+  const debouncedSearch   = useDebounce(filters.search,   500)
+  const debouncedMinPrice = useDebounce(filters.minPrice, 500)
+  const debouncedMaxPrice = useDebounce(filters.maxPrice, 500)
+  const debouncedMinSqft  = useDebounce(filters.minSqft,  500)
+  const debouncedMaxSqft  = useDebounce(filters.maxSqft,  500)
+  const debouncedMinYear  = useDebounce(filters.minYear,  500)
+  const debouncedMaxYear  = useDebounce(filters.maxYear,  500)
 
-  // Завжди актуальні параметри доступні через ref (для loadMore)
   paramsRef.current = {
     search:     debouncedSearch,
     status:     filters.status,
     min_price:  debouncedMinPrice,
     max_price:  debouncedMaxPrice,
-    min_beds:   filters.minBeds > 0 ? filters.minBeds : '',
-    min_baths:  filters.minBaths > 0 ? filters.minBaths : '',
+    beds:  filters.beds.length > 0 ? filters.beds.join(',') : '',
+    baths: filters.baths.length > 0 ? filters.baths.join(',') : '',
     min_sqft:   debouncedMinSqft,
     max_sqft:   debouncedMaxSqft,
     min_year:   debouncedMinYear,
@@ -61,7 +60,6 @@ function BuyPage() {
     sort:       filters.sort,
   }
 
-  // Початковий/фільтрований запит
   useEffect(() => {
     let cancelled = false
     pageRef.current = 1
@@ -83,13 +81,12 @@ function BuyPage() {
   }, [
     debouncedSearch, filters.status, filters.type,
     debouncedMinPrice, debouncedMaxPrice,
-    filters.minBeds, filters.minBaths,
+    filters.beds, filters.baths,
     debouncedMinSqft, debouncedMaxSqft,
     debouncedMinYear, debouncedMaxYear,
     filters.waterfront, filters.sort,
   ])
 
-  // Догрузка — тільки дві залежності, параметри беремо з ref
   const loadMore = useCallback(() => {
     if (loadingMore || !hasMore) return
     const nextPage = pageRef.current + 1
@@ -112,11 +109,11 @@ function BuyPage() {
   const set = (key) => (val) => setFilters(prev => ({ ...prev, [key]: val }))
 
   const activeFiltersCount = [
-    filters.status !== 'all',   filters.type !== 'all',
-    filters.minPrice,           filters.maxPrice,
-    filters.minBeds > 0,        filters.minBaths > 0,
-    filters.minSqft,            filters.maxSqft,
-    filters.minYear,            filters.maxYear,
+    filters.status !== 'all', filters.type !== 'all',
+    filters.minPrice, filters.maxPrice,
+    filters.beds.length > 0, filters.baths.length > 0,
+    filters.minSqft, filters.maxSqft,
+    filters.minYear, filters.maxYear,
     filters.waterfront !== 'any',
     filters.sort !== 'default',
   ].filter(Boolean).length
@@ -144,8 +141,8 @@ function BuyPage() {
         type={filters.type}             setType={set('type')}
         minPrice={filters.minPrice}     setMinPrice={set('minPrice')}
         maxPrice={filters.maxPrice}     setMaxPrice={set('maxPrice')}
-        minBeds={filters.minBeds}       setMinBeds={set('minBeds')}
-        minBaths={filters.minBaths}     setMinBaths={set('minBaths')}
+        beds={filters.beds}             setBeds={set('beds')}
+        baths={filters.baths}           setBaths={set('baths')}
         minSqft={filters.minSqft}       setMinSqft={set('minSqft')}
         maxSqft={filters.maxSqft}       setMaxSqft={set('maxSqft')}
         minYear={filters.minYear}       setMinYear={set('minYear')}

@@ -10,8 +10,8 @@ function BuyFilters({
   type, setType,
   minPrice, setMinPrice,
   maxPrice, setMaxPrice,
-  minBeds, setMinBeds,
-  minBaths, setMinBaths,
+  beds, setBeds,
+  baths, setBaths,
   minSqft, setMinSqft,
   maxSqft, setMaxSqft,
   minYear, setMinYear,
@@ -96,39 +96,67 @@ function BuyFilters({
           </div>
         </Dropdown>
 
-        {/* Beds */}
-        <Dropdown label={`Beds${minBeds > 0 ? ` ${minBeds}+` : ''}`} minWidth="min-w-[200px]">
-          <p className="text-gold text-[10px] tracking-widest uppercase font-sans mb-3">Min Bedrooms</p>
-          <div className="flex gap-2">
-            {[0, 1, 2, 3, 4, 5].map(n => (
+       {/* Beds */}
+        <Dropdown label={beds.length > 0 ? `${beds.join(', ')} bd` : 'Beds'} minWidth="min-w-[220px]">
+          <p className="text-gold text-[10px] tracking-widest uppercase font-sans mb-3">Bedrooms</p>
+          <div className="flex gap-2 flex-wrap">
+            {[1, 2, 3, 4, 5, 6, 7].map(n => (
               <button
                 key={n}
-                onClick={() => setMinBeds(n)}
+                onClick={() => setBeds(
+                  beds.includes(n)
+                    ? beds.filter(b => b !== n)
+                    : [...beds, n].sort((a, b) => a - b)
+                )}
                 className={`w-8 h-8 text-xs font-sans transition-all duration-200 ${
-                  minBeds === n ? 'bg-gold text-black' : 'border border-white/20 text-white/50 hover:border-gold hover:text-gold'
+                  beds.includes(n)
+                    ? 'bg-gold text-black'
+                    : 'border border-white/20 text-white/50 hover:border-gold hover:text-gold'
                 }`}
               >
-                {n === 0 ? 'Any' : `${n}+`}
+                {n}
               </button>
             ))}
+            {beds.length > 0 && (
+              <button
+                onClick={() => setBeds([])}
+                className="px-2 h-8 text-[10px] font-sans border border-white/10 text-white/30 hover:border-gold hover:text-gold transition-all duration-200"
+              >
+                Any
+              </button>
+            )}
           </div>
         </Dropdown>
 
         {/* Baths */}
-        <Dropdown label={`Baths${minBaths > 0 ? ` ${minBaths}+` : ''}`} minWidth="min-w-[200px]">
-          <p className="text-gold text-[10px] tracking-widest uppercase font-sans mb-3">Min Bathrooms</p>
-          <div className="flex gap-2">
-            {[0, 1, 2, 3, 4].map(n => (
+        <Dropdown label={baths.length > 0 ? `${baths.join(', ')} ba` : 'Baths'} minWidth="min-w-[220px]">
+          <p className="text-gold text-[10px] tracking-widest uppercase font-sans mb-3">Bathrooms</p>
+          <div className="flex gap-2 flex-wrap">
+            {[1, 2, 3, 4, 5].map(n => (
               <button
                 key={n}
-                onClick={() => setMinBaths(n)}
+                onClick={() => setBaths(
+                  baths.includes(n)
+                    ? baths.filter(b => b !== n)
+                    : [...baths, n].sort((a, b) => a - b)
+                )}
                 className={`w-8 h-8 text-xs font-sans transition-all duration-200 ${
-                  minBaths === n ? 'bg-gold text-black' : 'border border-white/20 text-white/50 hover:border-gold hover:text-gold'
+                  baths.includes(n)
+                    ? 'bg-gold text-black'
+                    : 'border border-white/20 text-white/50 hover:border-gold hover:text-gold'
                 }`}
               >
-                {n === 0 ? 'Any' : `${n}+`}
+                {n}
               </button>
             ))}
+            {baths.length > 0 && (
+              <button
+                onClick={() => setBaths([])}
+                className="px-2 h-8 text-[10px] font-sans border border-white/10 text-white/30 hover:border-gold hover:text-gold transition-all duration-200"
+              >
+                Any
+              </button>
+            )}
           </div>
         </Dropdown>
 
