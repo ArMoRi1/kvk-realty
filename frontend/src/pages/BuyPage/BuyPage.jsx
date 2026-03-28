@@ -4,6 +4,7 @@ import BuyFilters from '../../components/sections/BuyPageSections/BuyFilters'
 import BuyListings from '../../components/sections/BuyPageSections/BuyListings'
 import BuyMap from '../../components/sections/BuyPageSections/BuyMap'
 import PropertyModal from '../../components/ui/PropertyModal'
+import Navbar from '../../components/layout/Navbar'
 
 function useDebounce(value, delay) {
   const [debounced, setDebounced] = useState(value)
@@ -134,7 +135,8 @@ function BuyPage() {
   }, [])
 
   return (
-    <div className="w-full min-h-screen bg-dark flex flex-col pt-[72px]">
+    <div className="w-full h-screen bg-dark flex flex-col pt-[72px]">
+      <Navbar />
       <BuyFilters
         search={filters.search}         setSearch={set('search')}
         status={filters.status}         setStatus={set('status')}

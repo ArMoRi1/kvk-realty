@@ -30,14 +30,14 @@ useEffect(() => {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
-          <Route path="buy" element={<BuyPage />} />
+          
           <Route path="sell" element={<SellPage />} />
           <Route path="blog" element={<BlogPage />} />
           <Route path="blog/:id" element={<BlogPostPage />} />
           <Route path="reviews" element={<ReviewsPage />} />
           <Route path="mortgage-calculator" element={<MortgagePage />} />
         </Route>
-
+        <Route path="/buy" element={<BuyPage />} />
         <Route path="/agents" element={<AgentsPage />} />
         <Route path="properties" element={<UnderConstructionPage />} />
         <Route path="500" element={<ServerErrorPage />} />
