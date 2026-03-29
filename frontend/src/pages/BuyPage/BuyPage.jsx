@@ -190,7 +190,7 @@ function BuyPage() {
 
       {/* IDX фіксований footer §18.3.6, §18.3.14a */}
       <div
-        className="fixed bottom-0 left-0 w-full z-[50] bg-[#0A0A0A]/95 border-t border-white/5 px-6 flex items-center justify-center"
+        className="fixed bottom-0 left-0 w-full z-[50] bg-[#0A0A0A]/95 border-t border-white/5 py-[3px] px-6 flex items-center justify-center"
         style={{ height: FOOTER_H }}
       >
         <p className="text-white/15 text-[12px] font-sans text-center">

@@ -1,5 +1,4 @@
 import { MapPin } from 'lucide-react'
-import { formatPrice } from '../../../mocks/properties'
 
 const PIN_POSITIONS = [
   { top: '20%', left: '30%' },
@@ -12,6 +11,13 @@ const PIN_POSITIONS = [
   { top: '80%', left: '35%' },
   { top: '40%', left: '15%' },
 ]
+
+function formatPrice(price, status) {
+  if (!price) return '—'
+  return status === 'Active Rental'
+    ? `$${price.toLocaleString()}/mo`
+    : `$${price.toLocaleString()}`
+}
 
 function BuyMap({ listings, activeId, onPinClick }) {
   return (

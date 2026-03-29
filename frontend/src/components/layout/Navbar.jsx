@@ -6,7 +6,6 @@ import logo from '../../assets/img/logo.png'
 const navLinks = [
   { label: 'HOME', path: '/' },
   { label: 'BUY', path: '/buy' },
-  { label: 'BLOG', path: '/blog' },
   { label: 'SELL', path: '/sell' },
   { label: 'AGENTS', path: '/agents' },
   { label: 'BLOG', path: '/blog' },

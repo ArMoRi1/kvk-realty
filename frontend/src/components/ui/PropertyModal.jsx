@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { X, Bed, Bath, Maximize2, MapPin, Phone, Mail, Home, Calendar, Waves, Building2, ChevronLeft, ChevronRight } from 'lucide-react'
 import axiosInstance from '../../api/axiosInstance'
-import rcLogo from '../../assets/img/RC_IDX_logo_105x50.gif'
+import rcLogo from '../../assets/img/RC_IDX_logo_170x76.gif'
 
 const TYPE_MAP = {
   SingleFamilyResidence: 'House',
