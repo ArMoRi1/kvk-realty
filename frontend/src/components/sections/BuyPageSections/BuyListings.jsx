@@ -82,9 +82,12 @@ function BuyListings({ listings, loading, loadingMore, hasMore, onLoadMore, acti
       )}
 
       {/* IDX дисклеймер */}
-      <div className="border-t border-white/5 px-6 py-3">
-        <p className="text-white/15 text-[10px] font-sans leading-relaxed">
-          IDX provided courtesy of Realcomp II Ltd. ©2025 Realcomp II Ltd. Shareholders. IDX information is provided exclusively for consumers' personal, non-commercial use.
+      <div className="border-t border-white/5 px-6 py-3 space-y-1">
+        <p className="text-white/15 text-[12px] font-sans leading-relaxed">
+          IDX provided courtesy of Realcomp II Ltd. via KVK Realty Group and Realcomp II Ltd., ©2025 Realcomp II Ltd. Shareholders
+        </p>
+        <p className="text-white/15 text-[12px] font-sans leading-relaxed">
+          Any use of search facilities of data on the site, other than by a consumer looking to purchase real estate, is prohibited.
         </p>
       </div>
 

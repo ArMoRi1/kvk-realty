@@ -24,6 +24,14 @@ const INITIAL_FILTERS = {
   waterfront: 'any', sort: 'default',
 }
 
+// Висоти:
+// Navbar:     72px
+// BuyFilters: 57px
+// IDX footer: 28px
+const NAVBAR_H  = 72
+const FILTER_H  = 57
+const FOOTER_H  = 28
+
 function BuyPage() {
   const [filters, setFilters]           = useState(INITIAL_FILTERS)
   const [listings, setListings]         = useState([])
@@ -50,8 +58,8 @@ function BuyPage() {
     status:     filters.status,
     min_price:  debouncedMinPrice,
     max_price:  debouncedMaxPrice,
-    beds:  filters.beds.length > 0 ? filters.beds.join(',') : '',
-    baths: filters.baths.length > 0 ? filters.baths.join(',') : '',
+    beds:       filters.beds.length  > 0 ? filters.beds.join(',')  : '',
+    baths:      filters.baths.length > 0 ? filters.baths.join(',') : '',
     min_sqft:   debouncedMinSqft,
     max_sqft:   debouncedMaxSqft,
     min_year:   debouncedMinYear,
@@ -110,11 +118,11 @@ function BuyPage() {
   const set = (key) => (val) => setFilters(prev => ({ ...prev, [key]: val }))
 
   const activeFiltersCount = [
-    filters.status !== 'all', filters.type !== 'all',
-    filters.minPrice, filters.maxPrice,
-    filters.beds.length > 0, filters.baths.length > 0,
-    filters.minSqft, filters.maxSqft,
-    filters.minYear, filters.maxYear,
+    filters.status !== 'all',   filters.type !== 'all',
+    filters.minPrice,           filters.maxPrice,
+    filters.beds.length  > 0,   filters.baths.length > 0,
+    filters.minSqft,            filters.maxSqft,
+    filters.minYear,            filters.maxYear,
     filters.waterfront !== 'any',
     filters.sort !== 'default',
   ].filter(Boolean).length
@@ -135,43 +143,59 @@ function BuyPage() {
   }, [])
 
   return (
-    <div className="w-full h-screen bg-dark flex flex-col pt-[72px]">
+    <div className="w-full h-screen bg-dark flex flex-col">
       <Navbar />
-      <BuyFilters
-        search={filters.search}         setSearch={set('search')}
-        status={filters.status}         setStatus={set('status')}
-        type={filters.type}             setType={set('type')}
-        minPrice={filters.minPrice}     setMinPrice={set('minPrice')}
-        maxPrice={filters.maxPrice}     setMaxPrice={set('maxPrice')}
-        beds={filters.beds}             setBeds={set('beds')}
-        baths={filters.baths}           setBaths={set('baths')}
-        minSqft={filters.minSqft}       setMinSqft={set('minSqft')}
-        maxSqft={filters.maxSqft}       setMaxSqft={set('maxSqft')}
-        minYear={filters.minYear}       setMinYear={set('minYear')}
-        maxYear={filters.maxYear}       setMaxYear={set('maxYear')}
-        waterfront={filters.waterfront} setWaterfront={set('waterfront')}
-        sort={filters.sort}             setSort={set('sort')}
-        resultsCount={total}
-        activeFiltersCount={activeFiltersCount}
-        onClear={() => setFilters(INITIAL_FILTERS)}
-      />
 
-      <div className="flex overflow-hidden" style={{ height: 'calc(100vh - 72px - 57px)' }}>
-        <BuyListings
-          listings={listings}
-          loading={loading}
-          loadingMore={loadingMore}
-          hasMore={hasMore}
-          onLoadMore={loadMore}
-          activeId={activeId}
-          onCardClick={handleCardClick}
+      <div
+        className="flex flex-col flex-1 overflow-hidden"
+        style={{ paddingTop: NAVBAR_H, paddingBottom: FOOTER_H }}
+      >
+        <BuyFilters
+          search={filters.search}         setSearch={set('search')}
+          status={filters.status}         setStatus={set('status')}
+          type={filters.type}             setType={set('type')}
+          minPrice={filters.minPrice}     setMinPrice={set('minPrice')}
+          maxPrice={filters.maxPrice}     setMaxPrice={set('maxPrice')}
+          beds={filters.beds}             setBeds={set('beds')}
+          baths={filters.baths}           setBaths={set('baths')}
+          minSqft={filters.minSqft}       setMinSqft={set('minSqft')}
+          maxSqft={filters.maxSqft}       setMaxSqft={set('maxSqft')}
+          minYear={filters.minYear}       setMinYear={set('minYear')}
+          maxYear={filters.maxYear}       setMaxYear={set('maxYear')}
+          waterfront={filters.waterfront} setWaterfront={set('waterfront')}
+          sort={filters.sort}             setSort={set('sort')}
+          resultsCount={total}
+          activeFiltersCount={activeFiltersCount}
           onClear={() => setFilters(INITIAL_FILTERS)}
         />
-        <BuyMap
-          listings={listings}
-          activeId={activeId}
-          onPinClick={handlePinClick}
-        />
+
+        <div className="flex flex-1 overflow-hidden">
+          <BuyListings
+            listings={listings}
+            loading={loading}
+            loadingMore={loadingMore}
+            hasMore={hasMore}
+            onLoadMore={loadMore}
+            activeId={activeId}
+            onCardClick={handleCardClick}
+            onClear={() => setFilters(INITIAL_FILTERS)}
+          />
+          <BuyMap
+            listings={listings}
+            activeId={activeId}
+            onPinClick={handlePinClick}
+          />
+        </div>
+      </div>
+
+      {/* IDX фіксований footer §18.3.6, §18.3.14a */}
+      <div
+        className="fixed bottom-0 left-0 w-full z-[50] bg-[#0A0A0A]/95 border-t border-white/5 px-6 flex items-center justify-center"
+        style={{ height: FOOTER_H }}
+      >
+        <p className="text-white/15 text-[12px] font-sans text-center">
+          IDX provided courtesy of Realcomp II Ltd. via KVK Realty Group, ©2025 Realcomp II Ltd. Shareholders. Any use of search facilities of data on the site, other than by a consumer looking to purchase real estate, is prohibited.
+        </p>
       </div>
 
       <PropertyModal listing={modalListing} onClose={handleModalClose} />

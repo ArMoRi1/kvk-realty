@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Bed, Bath, Maximize2, Heart, Home, Calendar, Waves } from 'lucide-react'
+import rcLogo from '../../assets/img/RC_IDX_logo_170x76.gif'
 
 const TYPE_MAP = {
   SingleFamilyResidence: 'House',
@@ -113,6 +114,7 @@ function PropertyCard({ listing, isActive, onClick }) {
             Listed by {listing.list_office}
           </p>
         )}
+        <img src={rcLogo} alt="Realcomp IDX" className="h-10 opacity-40 mt-[10px]" />
       </div>
     </div>
   )

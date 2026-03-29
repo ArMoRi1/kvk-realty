@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { X, Bed, Bath, Maximize2, MapPin, Phone, Mail, Home, Calendar, Waves, Building2, ChevronLeft, ChevronRight } from 'lucide-react'
 import axiosInstance from '../../api/axiosInstance'
+import rcLogo from '../../assets/img/RC_IDX_logo_105x50.gif'
 
 const TYPE_MAP = {
   SingleFamilyResidence: 'House',
@@ -254,6 +255,10 @@ function PropertyModal({ listing, onClose }) {
                 {listing.list_office_phone && <p className="text-white/30 text-sm font-sans mt-0.5">{listing.list_office_phone}</p>}
               </div>
             </div>
+          </div>
+
+          <div className="flex items-center gap-3 mb-3">
+            <img src={rcLogo} alt="Realcomp IDX" className="h-10 opacity-40" />
           </div>
 
           {/* IDX дисклеймери */}
